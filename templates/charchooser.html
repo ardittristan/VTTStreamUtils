@@ -1,0 +1,21 @@
+<form autocomplete="off" onsubmit="event.preventDefault()">
+  <div class="tableDiv">
+    <table>
+      <tr>
+        <th>Name</th>
+      </tr>
+      {{#each actors}}
+      <tr>
+        <td>
+          <input type="checkbox" id="{{this.id}}" value="{{this.id}}" name="{{this.id}}" {{checked this.checked}} />
+          <label for="{{this.id}}">{{this.name}}</label>
+        </td>
+      </tr>
+      {{/each}}
+    </table>
+  </div>
+  <div class="bottomButtons">
+    <button type="submit">Ok</button>
+    <button type="button" class="cancelButton">Cancel</button>
+  </div>
+</form>
