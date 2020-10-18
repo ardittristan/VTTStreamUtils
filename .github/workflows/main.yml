@@ -1,4 +1,4 @@
-name: colorSettings CI
+name: streamUtils CI
 
 on:
   push:
