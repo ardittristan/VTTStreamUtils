@@ -1,5 +1,9 @@
 # Patch Notes
 
+## Version 1.0.1
+
+* Fixed settings not being categorized. **This update will reset your settings**
+
 ## Version 1.0.0
 
 * **Changed module name to have a higher priority in script order**

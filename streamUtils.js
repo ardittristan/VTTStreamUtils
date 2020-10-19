@@ -59,7 +59,7 @@ function stringIncludesArray(string, array) {
 /*******************************************************/
 
 async function applyCss() {
-  $("head").append($(`<style>${game.settings.get("streamutils", "cssEditor")}</style>`));
+  $("head").append($(`<style>${game.settings.get("0streamutils", "cssEditor")}</style>`));
 }
 
 /*******************************************************/
@@ -68,9 +68,9 @@ async function applyCss() {
 
 //#region
 async function customInfo() {
-  if (!game.settings.get("streamutils", "enableCustom")) return;
+  if (!game.settings.get("0streamutils", "enableCustom")) return;
   /** @type {import('./docs/settings').SettingsObject[]} */
-  let settings = JSON.parse(game.settings.get("streamutils", "jsonEditor"));
+  let settings = JSON.parse(game.settings.get("0streamutils", "jsonEditor"));
   if (settings.length === 0) return;
 
   settings.forEach((setting) => {
@@ -119,8 +119,8 @@ async function customInfo() {
       $(".streamUtils").append($(`<section class="customApp" id="${setting.id}"><table id="${setting.id}App"></table></section>`));
       game.actors.forEach((actor) => {
         if (
-          game.settings.get("streamutils", "checkedList")[0].includes(actor.id) ||
-          (game.settings.get("streamutils", "checkedList")[0].length === 0 && game.settings.get("streamutils", "globalCheckedList")[0].includes(actor.id))
+          game.settings.get("0streamutils", "checkedList")[0].includes(actor.id) ||
+          (game.settings.get("0streamutils", "checkedList")[0].length === 0 && game.settings.get("0streamutils", "globalCheckedList")[0].includes(actor.id))
         ) {
           let entries = "";
 
@@ -152,8 +152,8 @@ async function customInfo() {
       setInterval(() => {
         game.actors.forEach((actor) => {
           if (
-            game.settings.get("streamutils", "checkedList")[0].includes(actor.id) ||
-            (game.settings.get("streamutils", "checkedList")[0].length === 0 && game.settings.get("streamutils", "globalCheckedList")[0].includes(actor.id))
+            game.settings.get("0streamutils", "checkedList")[0].includes(actor.id) ||
+            (game.settings.get("0streamutils", "checkedList")[0].length === 0 && game.settings.get("0streamutils", "globalCheckedList")[0].includes(actor.id))
           ) {
             setting.data.forEach((dataObject) => {
               let element = document.getElementById(`${setting.id}App${actor.id}${dataObject.name}`);
@@ -193,19 +193,19 @@ function hasIconColor(dataObject) {
 
 //#region
 async function healthInfo() {
-  if (!game.settings.get("streamutils", "enableHpView")) return;
+  if (!game.settings.get("0streamutils", "enableHpView")) return;
   $(".streamUtils").append($('<section id="hp"><table id="hpApp"></table></section>'));
   game.actors.forEach((actor) => {
     if (
-      game.settings.get("streamutils", "checkedList")[0].includes(actor.id) ||
-      (game.settings.get("streamutils", "checkedList")[0].length === 0 && game.settings.get("streamutils", "globalCheckedList")[0].includes(actor.id))
+      game.settings.get("0streamutils", "checkedList")[0].includes(actor.id) ||
+      (game.settings.get("0streamutils", "checkedList")[0].length === 0 && game.settings.get("0streamutils", "globalCheckedList")[0].includes(actor.id))
     ) {
       $("#hpApp").append(
         $(`
           <tr class="playerRow">
             <td>
               <div class="hp" id="hpApp${actor.id}">
-                ${getHPString(getProperty(actor, game.settings.get("streamutils", "hpPath")), getProperty(actor, game.settings.get("streamutils", "maxHpPath")))}
+                ${getHPString(getProperty(actor, game.settings.get("0streamutils", "hpPath")), getProperty(actor, game.settings.get("0streamutils", "maxHpPath")))}
               </div>
             </td>
             <td>
@@ -220,14 +220,14 @@ async function healthInfo() {
   setInterval(() => {
     game.actors.forEach((actor) => {
       if (
-        game.settings.get("streamutils", "checkedList")[0].includes(actor.id) ||
-        (game.settings.get("streamutils", "checkedList")[0].length === 0 && game.settings.get("streamutils", "globalCheckedList")[0].includes(actor.id))
+        game.settings.get("0streamutils", "checkedList")[0].includes(actor.id) ||
+        (game.settings.get("0streamutils", "checkedList")[0].length === 0 && game.settings.get("0streamutils", "globalCheckedList")[0].includes(actor.id))
       ) {
         let element = document.getElementById(`hpApp${actor.id}`);
         if (element) {
           element.innerHTML = getHPString(
-            getProperty(actor, game.settings.get("streamutils", "hpPath")),
-            getProperty(actor, game.settings.get("streamutils", "maxHpPath"))
+            getProperty(actor, game.settings.get("0streamutils", "hpPath")),
+            getProperty(actor, game.settings.get("0streamutils", "maxHpPath"))
           );
         }
       }
@@ -249,23 +249,23 @@ function getHPString(health, maxHealth) {
 /*******************************************************/
 
 Hooks.once("init", () => {
-  game.settings.register("streamutils", "checkedList", {
+  game.settings.register("0streamutils", "checkedList", {
     scope: "client",
     type: Array,
     default: [],
   });
-  game.settings.registerMenu("streamutils", "actorSelector", {
+  game.settings.registerMenu("0streamutils", "actorSelector", {
     name: "streamUtils.settings.actorSelector.name",
     label: "streamUtils.settings.actorSelector.label",
     type: CharacterSelector,
     restricted: false,
   });
-  game.settings.register("streamutils", "globalCheckedList", {
+  game.settings.register("0streamutils", "globalCheckedList", {
     scope: "world",
     type: Array,
     default: [],
   });
-  game.settings.registerMenu("streamutils", "globalActorSelector", {
+  game.settings.registerMenu("0streamutils", "globalActorSelector", {
     name: "streamUtils.settings.globalActorSelector.name",
     label: "streamUtils.settings.globalActorSelector.label",
     hint: "streamUtils.settings.globalActorSelector.hint",
@@ -274,26 +274,26 @@ Hooks.once("init", () => {
   });
 
   // module disabler settings
-  game.settings.register("streamutils", "disabledModules", {
+  game.settings.register("0streamutils", "disabledModules", {
     name: "streamUtils.settings.disabledModules.name",
     hint: "streamUtils.settings.disabledModules.hint",
     scope: "world",
     type: String,
     default: "",
     config: true,
-    onChange: () => localStorage.setItem("streamutilsDisabledModules", game.settings.get("streamutils", "disabledModules")),
+    onChange: () => localStorage.setItem("streamutilsDisabledModules", game.settings.get("0streamutils", "disabledModules")),
   });
-  localStorage.setItem("streamutilsDisabledModules", game.settings.get("streamutils", "disabledModules"));
+  localStorage.setItem("streamutilsDisabledModules", game.settings.get("0streamutils", "disabledModules"));
 
-  // module settings
-  game.settings.register("streamutils", "enableHpView", {
+  // hp module settings
+  game.settings.register("0streamutils", "enableHpView", {
     name: "streamUtils.settings.enableHpView.name",
     scope: "client",
     type: Boolean,
     default: true,
     config: true,
   });
-  game.settings.register("streamutils", "hpPath", {
+  game.settings.register("0streamutils", "hpPath", {
     name: "streamUtils.settings.hpPath.name",
     hint: "streamUtils.settings.hpPath.hint",
     scope: "world",
@@ -302,7 +302,7 @@ Hooks.once("init", () => {
     config: true,
     restricted: true,
   });
-  game.settings.register("streamutils", "maxHpPath", {
+  game.settings.register("0streamutils", "maxHpPath", {
     name: "streamUtils.settings.maxHpPath.name",
     hint: "streamUtils.settings.maxHpPath.hint",
     scope: "world",
@@ -312,8 +312,14 @@ Hooks.once("init", () => {
     restricted: true,
   });
 
+  // encounter module settings
+  // game.settings.register("0streamutils", "enableTracker", {
+  //   name: "Enable Combat Tracker",
+
+  // })
+
   // custom module settings
-  game.settings.registerMenu("streamutils", "customEditor", {
+  game.settings.registerMenu("0streamutils", "customEditor", {
     name: "streamUtils.settings.customEditor.name",
     label: "streamUtils.settings.customEditor.label",
     hint: "streamUtils.settings.customEditor.hint",
@@ -321,7 +327,7 @@ Hooks.once("init", () => {
     type: CustomEditor,
     restricted: true,
   });
-  game.settings.register("streamutils", "enableCustom", {
+  game.settings.register("0streamutils", "enableCustom", {
     name: "streamUtils.settings.enableCustom.name",
     hint: "streamUtils.settings.enableCustom.hint",
     scope: "client",
@@ -329,19 +335,19 @@ Hooks.once("init", () => {
     default: true,
     config: true,
   });
-  game.settings.register("streamutils", "cssEditor", {
+  game.settings.register("0streamutils", "cssEditor", {
     scope: "world",
     config: false,
     type: String,
     default: "",
   });
-  game.settings.register("streamutils", "jsonEditor", {
+  game.settings.register("0streamutils", "jsonEditor", {
     scope: "world",
     config: false,
     type: String,
     default: "[\n    \n]",
   });
-  if (game.settings.get("streamutils", "jsonEditor").length === 0) game.settings.set("streamutils", "jsonEditor", "[\n    \n]");
+  if (game.settings.get("0streamutils", "jsonEditor").length === 0) game.settings.set("0streamutils", "jsonEditor", "[\n    \n]");
 });
 
 class CharacterSelector extends FormApplication {
@@ -357,7 +363,7 @@ class CharacterSelector extends FormApplication {
     return mergeObject(super.defaultOptions, {
       id: "streamutils-chooser",
       title: game.i18n.localize("streamUtils.windows.CharacterSelector.title"),
-      template: "modules/streamutils/templates/charchooser.html",
+      template: "modules/0streamutils/templates/charchooser.html",
       classes: ["sheet"],
       closeOnSubmit: true,
       resizable: true,
@@ -413,21 +419,21 @@ class CharacterSelector extends FormApplication {
 
   /** @return {String[]} */
   getList() {
-    return game.settings.get("streamutils", "checkedList")?.[0];
+    return game.settings.get("0streamutils", "checkedList")?.[0];
   }
 
   setList(checkedList) {
-    game.settings.set("streamutils", "checkedList", checkedList);
+    game.settings.set("0streamutils", "checkedList", checkedList);
   }
 }
 
 class GlobalCharacterSelector extends CharacterSelector {
   getList() {
-    return game.settings.get("streamutils", "globalCheckedList")?.[0];
+    return game.settings.get("0streamutils", "globalCheckedList")?.[0];
   }
 
   setList(checkedList) {
-    game.settings.set("streamutils", "globalCheckedList", checkedList);
+    game.settings.set("0streamutils", "globalCheckedList", checkedList);
   }
 }
 
@@ -445,7 +451,7 @@ class CustomEditor extends FormApplication {
     return mergeObject(super.defaultOptions, {
       id: "custom-editor",
       title: game.i18n.localize("streamUtils.windows.customEditor.title"),
-      template: "modules/streamutils/templates/customEditor.html",
+      template: "modules/0streamutils/templates/customEditor.html",
       classes: ["sheet"],
       closeOnSubmit: true,
       resizable: true,
@@ -509,9 +515,9 @@ class CustomEditor extends FormApplication {
   }
 
   sendToSettings() {
-    game.settings.set("streamutils", "cssEditor", this.editorArray["cssEditor"].getValue());
-    game.settings.set("streamutils", "jsonEditor", this.editorArray["jsonEditor"].getValue());
-    if (game.settings.get("streamutils", "jsonEditor").length === 0) game.settings.set("streamutils", "jsonEditor", "[\n    \n]");
+    game.settings.set("0streamutils", "cssEditor", this.editorArray["cssEditor"].getValue());
+    game.settings.set("0streamutils", "jsonEditor", this.editorArray["jsonEditor"].getValue());
+    if (game.settings.get("0streamutils", "jsonEditor").length === 0) game.settings.set("0streamutils", "jsonEditor", "[\n    \n]");
     ui.notifications.notify(game.i18n.localize("streamUtils.windows.CustomEditor.saved"));
     this.unsaved = false;
   }
@@ -524,7 +530,7 @@ class CustomEditor extends FormApplication {
       showPrintMargin: false,
       enableLiveAutocompletion: true,
     });
-    this.editorArray[name].setValue(game.settings.get("streamutils", name), -1);
+    this.editorArray[name].setValue(game.settings.get("0streamutils", name), -1);
     this.editorArray[name].commands.addCommand({
       name: "Save",
       bindKey: { win: "Ctrl-S", mac: "Command-S" },

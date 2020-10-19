@@ -3,7 +3,7 @@
 
 # VTT StreamUtils
 
-This module adds extra and custom overlays to the /stream page of Foundry VTT.
+This module adds extra and custom overlays to the /stream page of Foundry VTT and also allows you to disable modules on the /stream page.
 
 ## Installation
 
