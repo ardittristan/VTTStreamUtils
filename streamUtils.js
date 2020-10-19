@@ -209,8 +209,8 @@ Hooks.once("init", () => {
     default: [],
   });
   game.settings.registerMenu("streamutils", "actorSelector", {
-    name: "Shown Actors",
-    label: "Open Actor List",
+    name: "streamUtils.settings.actorSelector.name",
+    label: "streamUtils.settings.actorSelector.label",
     type: CharacterSelector,
     restricted: false,
   });
@@ -220,24 +220,24 @@ Hooks.once("init", () => {
     default: [],
   });
   game.settings.registerMenu("streamutils", "globalActorSelector", {
-    name: "Shown Actors - Global",
-    label: "Open Actor List - Global",
-    hint: "Global fallback actor list if client list is empty",
+    name: "streamUtils.settings.globalActorSelector.name",
+    label: "streamUtils.settings.globalActorSelector.label",
+    hint: "streamUtils.settings.globalActorSelector.hint",
     type: GlobalCharacterSelector,
     restricted: true,
   });
 
   // module settings
   game.settings.register("streamutils", "enableHpView", {
-    name: "Enable HP View",
+    name: "streamUtils.settings.enableHpView.name",
     scope: "client",
     type: Boolean,
     default: true,
     config: true,
   });
   game.settings.register("streamutils", "hpPath", {
-    name: "HP Variable Path",
-    hint: "The path to the hp variable without including Actor (if it's 'Actor.data.hp.value' for example it'll be 'data.hp.value')",
+    name: "streamUtils.settings.hpPath.name",
+    hint: "streamUtils.settings.hpPath.hint",
     scope: "world",
     type: String,
     default: "data.data.attributes.hp.value",
@@ -245,8 +245,8 @@ Hooks.once("init", () => {
     restricted: true,
   });
   game.settings.register("streamutils", "maxHpPath", {
-    name: "Max HP Path",
-    hint: "The path to the max hp variable",
+    name: "streamUtils.settings.maxHpPath.name",
+    hint: "streamUtils.settings.maxHpPath.hint",
     scope: "world",
     type: String,
     default: "data.data.attributes.hp.max",
@@ -256,15 +256,16 @@ Hooks.once("init", () => {
 
   // custom module settings
   game.settings.registerMenu("streamutils", "customEditor", {
-    name: "Custom Overlay Editor",
-    label: "Open Editor",
-    hint: "Opens an editor that allows you to create your own stream overlays.",
+    name: "streamUtils.settings.customEditor.name",
+    label: "streamUtils.settings.customEditor.label",
+    hint: "streamUtils.settings.customEditor.hint",
     icon: "far fa-file-code",
     type: CustomEditor,
     restricted: true,
   });
   game.settings.register("streamutils", "enableCustom", {
-    name: "Enable custom entries",
+    name: "streamUtils.settings.enableCustom.name",
+    hint: "streamUtils.settings.enableCustom.hint",
     scope: "client",
     type: Boolean,
     default: true,
@@ -297,7 +298,7 @@ class CharacterSelector extends FormApplication {
   static get defaultOptions() {
     return mergeObject(super.defaultOptions, {
       id: "streamutils-chooser",
-      title: "Choose actors to show",
+      title: game.i18n.localize("streamUtils.windows.CharacterSelector.title"),
       template: "modules/streamutils/templates/charchooser.html",
       classes: ["sheet"],
       closeOnSubmit: true,
@@ -385,7 +386,7 @@ class CustomEditor extends FormApplication {
   static get defaultOptions() {
     return mergeObject(super.defaultOptions, {
       id: "custom-editor",
-      title: "Custom Overlay Editor",
+      title: game.i18n.localize("streamUtils.windows.customEditor.title"),
       template: "modules/streamutils/templates/customEditor.html",
       classes: ["sheet"],
       closeOnSubmit: true,
@@ -419,14 +420,14 @@ class CustomEditor extends FormApplication {
   _getHeaderButtons() {
     return [
       {
-        label: "Close",
+        label: game.i18n.localize("Close"),
         class: "close",
         icon: "fas fa-times",
         onclick: (ev) => {
           if (this.unsaved) {
             Dialog.confirm({
-              title: "Save before closing?",
-              content: `<p>${"Do you want to save before closing?"}</p>`,
+              title: game.i18n.localize("streamUtils.windows.CustomEditor.saveDialog.title"),
+              content: `<p>${game.i18n.localize("streamUtils.windows.CustomEditor.saveDialog.content")}</p>`,
               yes: () => {
                 $("#custom-editor button.save-button").trigger("click");
                 setTimeout(() => {
@@ -453,7 +454,7 @@ class CustomEditor extends FormApplication {
     game.settings.set("streamutils", "cssEditor", this.editorArray["cssEditor"].getValue());
     game.settings.set("streamutils", "jsonEditor", this.editorArray["jsonEditor"].getValue());
     if (game.settings.get("streamutils", "jsonEditor").length === 0) game.settings.set("streamutils", "jsonEditor", "[\n    \n]");
-    ui.notifications.notify("Saved!");
+    ui.notifications.notify(game.i18n.localize("streamUtils.windows.CustomEditor.saved"));
     this.unsaved = false;
   }
 

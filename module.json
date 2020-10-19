@@ -6,6 +6,11 @@
   "author": "ardittristan#0001",
   "scripts": ["streamUtils.js", "./lib/ace/ace.js"],
   "styles": ["./css/streamUtils.css"],
+  "languages": [{
+    "lang": "en",
+    "name": "English",
+    "path": "./lang/en.json"
+  }],
   "socket": true,
   "url": "https://github.com/ardittristan/VTTStreamUtils",
   "manifest": "https://raw.githubusercontent.com/ardittristan/VTTStreamUtils/master/module.json",

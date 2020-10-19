@@ -1,0 +1,53 @@
+{
+  "streamUtils": {
+    "settings": {
+      "actorSelector": {
+        "name": "Shown Actors",
+        "label": "Open Actor List"
+      },
+      "globalActorSelector": {
+        "name": "Shown Actors - Global",
+        "label": "Open Actor List - Global",
+        "hint": "Global fallback actor list if client list is empty"
+      },
+      "enableHpView": {
+        "name": "Enable HP View"
+      },
+      "hpPath": {
+        "name": "HP Variable Path",
+        "hint": "The path to the hp variable without including Actor (if it's 'Actor.data.hp.value' for example it'll be 'data.hp.value')"
+      },
+      "maxHpPath": {
+        "name": "Max HP Path",
+        "hint": "The path to the max hp variable"
+      },
+      "customEditor": {
+        "name": "Custom Overlay Editor",
+        "label": "Open Editor",
+        "hint": "Opens an editor that allows you to create your own stream overlays."
+      },
+      "enableCustom": {
+        "name": "Enable custom entries",
+        "hint": "Enables or disables custom overlays being rendered on /stream"
+      }
+    },
+    "windows": {
+      "CharacterSelector": {
+        "title": "Choose actors to show"
+      },
+      "CustomEditor": {
+        "title": "Custom Overlay Editor",
+        "saved": "Saved!",
+        "saveDialog": {
+          "title": "Save before closing?",
+          "content": "Do you want to save before closing?"
+        },
+        "app": {
+          "help": "Help",
+          "css": "Custom CSS",
+          "entries": "Custom Entries"
+        }
+      }
+    }
+  }
+}
