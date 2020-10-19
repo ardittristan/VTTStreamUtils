@@ -16,13 +16,14 @@ function main() {
 
 //#region
 async function disableModules() {
+  const filter = localStorage.getItem("streamutilsDisabledModules").split(",");
+  if (filter?.[0]?.length === 0 || filter?.[0]?.length === undefined) return;
   new MutationObserver((mutations) => {
     mutations.forEach(({ addedNodes }) => {
       addedNodes.forEach((node) => {
         if (node.nodeType === 1 && node.tagName === "SCRIPT") {
           const src = node.src || "";
-          const filter = localStorage.getItem("streamutilsDisabledModules").split(",");
-          if (filter != undefined && filter?.length !== 0 && stringIncludesArray(src, filter)) {
+          if (stringIncludesArray(src, filter)) {
             node.type = "javascript/blocked";
 
             //Firefox compat

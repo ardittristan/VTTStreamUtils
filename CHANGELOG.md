@@ -1,5 +1,9 @@
 # Patch Notes
 
+## Version 1.0.4
+
+* Final empty filter fix
+
 ## Version 1.0.3
 
 * Fix empty filter again
