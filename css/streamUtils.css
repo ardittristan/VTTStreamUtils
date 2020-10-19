@@ -1,5 +1,5 @@
-@import url('https://fonts.googleapis.com/css2?family=Berkshire+Swash&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Lemonada:wght@600&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Berkshire+Swash&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Lemonada:wght@600&display=swap");
 
 /*
 @section body fix
@@ -21,6 +21,30 @@ body.stream section#chat {
 }
 
 /*
+@section customApp
+*/
+
+body.stream .customApp table {
+  width: max-content;
+  border: none;
+  background: none;
+  font-family: "Berkshire Swash", cursive;
+}
+
+body.stream .customApp .number {
+  margin-right: 0.75em;
+  font-family: "Lemonada", cursive;
+}
+
+body.stream .customApp tr.playerRow {
+  background-color: unset;
+}
+
+body.stream .customApp .playerRow td:last-of-type {
+  padding-bottom: 0.45em;
+}
+
+/*
 @section hpApp
 */
 
@@ -28,12 +52,12 @@ body.stream #hpApp {
   width: max-content;
   border: none;
   background: none;
-  font-family: 'Berkshire Swash', cursive;
+  font-family: "Berkshire Swash", cursive;
 }
 
 body.stream #hpApp .hp {
   margin-right: 0.75em;
-  font-family: 'Lemonada', cursive;
+  font-family: "Lemonada", cursive;
 }
 
 body.stream #hpApp .hp .fas.fa-heart {
@@ -46,11 +70,11 @@ body.stream #hpApp .hp .fas.fa-skull {
   color: lightgrey;
 }
 
-body.stream #hpApp tr.playerRow {
+body.stream #hpApp tr {
   background-color: unset;
 }
 
-body.stream #hpApp .playerRow td:last-of-type {
+body.stream #hpApp tr td:last-of-type {
   padding-bottom: 0.45em;
 }
 
@@ -87,4 +111,37 @@ body.stream #hpApp .playerRow td:last-of-type {
 
 #streamutils-chooser label {
   align-self: center;
+}
+
+#custom-editor .editor {
+  width: 100%;
+  height: calc(50% - (39px + 45px) / 2);
+}
+
+#custom-editor .custom-editor-border {
+  clear: both;
+  width: 100%;
+  height: calc(100% - 32px);
+}
+
+#custom-editor .buttonDiv {
+  width: 100%;
+  display: inline-flex;
+}
+
+#custom-editor.app.window-app.sheet {
+  min-width: 602px;
+}
+
+#custom-editor button.save-button {
+  margin-right: unset;
+}
+
+#custom-editor button.help-button {
+  max-width: min-content;
+  margin-left: unset;
+}
+
+#custom-editor .custom-editor-border h2:last-of-type {
+  margin-top: 8px;
 }
