@@ -1,5 +1,9 @@
 # Patch Notes
 
+## Version 1.0.3
+
+* Fix empty filter again
+
 ## Version 1.0.2
 
 * Fixed empty filter disabling all modules
