@@ -1,7 +1,7 @@
 {
   "name": "streamutils",
   "title": "Stream Utils",
-  "description": "",
+  "description": "This module adds extra (such as hp) and custom overlays to the /stream page.",
   "version": "0.1.0",
   "author": "ardittristan#0001",
   "scripts": ["streamUtils.js", "./lib/ace/ace.js"],

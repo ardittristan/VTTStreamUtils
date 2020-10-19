@@ -3,6 +3,7 @@ if (window.location.pathname.includes("/stream")) {
 }
 
 function main() {
+  $("body").append($('<div class="streamUtils"></div>'))
   healthInfo();
   applyCss();
   customInfo();
@@ -30,7 +31,7 @@ async function customInfo() {
   settings.forEach((setting) => {
     if (setting.actorList === false) {
       // if it has custom entries
-      $("body").append($(`<section class="customApp" id="${setting.id}"><table id="${setting.id}App"></table></section>`));
+      $(".streamUtils").append($(`<section class="customApp" id="${setting.id}"><table id="${setting.id}App"></table></section>`));
       setting.data.forEach((entry) => {
         let entries = "";
 
@@ -70,7 +71,7 @@ async function customInfo() {
       }, 5000);
     } else {
       // if it uses the actor list as entries
-      $("body").append($(`<section class="customApp" id="${setting.id}"><table id="${setting.id}App"></table></section>`));
+      $(".streamUtils").append($(`<section class="customApp" id="${setting.id}"><table id="${setting.id}App"></table></section>`));
       game.actors.forEach((actor) => {
         if (
           game.settings.get("streamutils", "checkedList")[0].includes(actor.id) ||
@@ -148,7 +149,7 @@ function hasIconColor(dataObject) {
 //#region
 async function healthInfo() {
   if (!game.settings.get("streamutils", "enableHpView")) return;
-  $("body").append($('<section id="hp"><table id="hpApp"></table></section>'));
+  $(".streamUtils").append($('<section id="hp"><table id="hpApp"></table></section>'));
   game.actors.forEach((actor) => {
     if (
       game.settings.get("streamutils", "checkedList")[0].includes(actor.id) ||
