@@ -1,3 +1,6 @@
+![GitHub All Releases](https://img.shields.io/github/downloads/ardittristan/VTTStreamUtils/total)
+[![Donate](https://img.shields.io/badge/Donate-PayPal-Green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=TF3LJHWV9U7HN)
+
 # VTT StreamUtils
 
 This module adds extra and custom overlays to the /stream page of Foundry VTT.
