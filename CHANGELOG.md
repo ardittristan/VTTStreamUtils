@@ -1,5 +1,9 @@
 # Patch Notes
 
+## Version 1.0.2
+
+* Fixed empty filter disabling all modules
+
 ## Version 1.0.1
 
 * Fixed settings not being categorized. **This update will reset your settings**

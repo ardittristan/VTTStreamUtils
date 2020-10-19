@@ -16,12 +16,13 @@ function main() {
 
 //#region
 async function disableModules() {
+  const filter = localStorage.getItem("streamutilsDisabledModules").split(",");
+  if (!filter || filter.length === 0) return;
   new MutationObserver((mutations) => {
     mutations.forEach(({ addedNodes }) => {
       addedNodes.forEach((node) => {
         if (node.nodeType === 1 && node.tagName === "SCRIPT") {
           const src = node.src || "";
-          const filter = localStorage.getItem("streamutilsDisabledModules").split(",");
           if (stringIncludesArray(src, filter)) {
             node.type = "javascript/blocked";
 
@@ -188,6 +189,15 @@ function hasIconColor(dataObject) {
 //#endregion
 
 /*******************************************************/
+//@section combat tracker
+/*******************************************************/
+
+// async function combatTracker() {
+//   if (!game.settings.get("0streamutils", "enableTracker")) return;
+
+// }
+
+/*******************************************************/
 //@section health info
 /*******************************************************/
 
@@ -315,8 +325,11 @@ Hooks.once("init", () => {
   // encounter module settings
   // game.settings.register("0streamutils", "enableTracker", {
   //   name: "Enable Combat Tracker",
-
-  // })
+  //   scope: "client",
+  //   type: Boolean,
+  //   default: true,
+  //   config: true,
+  // });
 
   // custom module settings
   game.settings.registerMenu("0streamutils", "customEditor", {
