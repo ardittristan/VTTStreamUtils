@@ -25,6 +25,10 @@ It is possible to create custom overlays, while this does require some knowledge
 
 ![image](docs/image/README/1603115818669.png)
 
+### Modules causing issues
+
+Sometimes modules don't play well with the /stream view, you can disable them by adding their identifier name to the disable setting. This setting only disables them on the /stream page
+
 ## Changelog
 
 Check the [Changelog](https://github.com/ardittristan/VTTStreamUtils/blob/master/CHANGELOG.md)

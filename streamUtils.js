@@ -1,13 +1,58 @@
 if (window.location.pathname.includes("/stream")) {
+  disableModules();
   observe("#chat-log", main);
 }
 
 function main() {
-  $("body").append($('<div class="streamUtils"></div>'))
+  $("body").append($('<div class="streamUtils"></div>'));
   healthInfo();
   applyCss();
   customInfo();
 }
+
+/*******************************************************/
+//@section disable modules
+/*******************************************************/
+
+//#region
+async function disableModules() {
+  new MutationObserver((mutations) => {
+    mutations.forEach(({ addedNodes }) => {
+      addedNodes.forEach((node) => {
+        if (node.nodeType === 1 && node.tagName === "SCRIPT") {
+          const src = node.src || "";
+          const filter = localStorage.getItem("streamutilsDisabledModules").split(",");
+          if (stringIncludesArray(src, filter)) {
+            node.type = "javascript/blocked";
+
+            //Firefox compat
+            const beforeScriptExecuteListener = function (event) {
+              if (node.getAttribute("type") === "javascript/blocked") event.preventDefault();
+              node.removeEventListener("beforescriptexecute", beforeScriptExecuteListener);
+            };
+            node.addEventListener("beforescriptexecute", beforeScriptExecuteListener);
+          }
+        }
+      });
+    });
+  }).observe(document.documentElement, {
+    childList: true,
+    subtree: true,
+  });
+}
+
+/**
+ * @param {String} string
+ * @param {String[]} array
+ */
+function stringIncludesArray(string, array) {
+  let included = false;
+  array.forEach((entry) => {
+    if (string.includes(entry)) included = true;
+  });
+  return included;
+}
+//#endregion
 
 /*******************************************************/
 //@section apply css
@@ -227,6 +272,18 @@ Hooks.once("init", () => {
     type: GlobalCharacterSelector,
     restricted: true,
   });
+
+  // module disabler settings
+  game.settings.register("streamutils", "disabledModules", {
+    name: "streamUtils.settings.disabledModules.name",
+    hint: "streamUtils.settings.disabledModules.hint",
+    scope: "world",
+    type: String,
+    default: "",
+    config: true,
+    onChange: () => localStorage.setItem("streamutilsDisabledModules", game.settings.get("streamutils", "disabledModules")),
+  });
+  localStorage.setItem("streamutilsDisabledModules", game.settings.get("streamutils", "disabledModules"));
 
   // module settings
   game.settings.register("streamutils", "enableHpView", {
@@ -531,14 +588,7 @@ function setAceModules(stringArray) {
  * @param {String} selector CSS selector for element to be observed
  * @param {Function} func function to run once element is observed
  */
-function observe(selector, func) {
-  if (document?.readyState !== "complete") {
-    setTimeout(() => {
-      observe(selector, func);
-    }, 100);
-    return;
-  }
-
+async function observe(selector, func) {
   const observer = new MutationObserver(() => {
     if ($(selector).length) {
       func();
@@ -546,7 +596,7 @@ function observe(selector, func) {
     }
   });
 
-  observer.observe(document.body, {
+  observer.observe(document.documentElement, {
     childList: true,
     subtree: true,
   });

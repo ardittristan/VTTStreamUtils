@@ -1,16 +1,18 @@
 {
-  "name": "streamutils",
+  "name": "0streamutils",
   "title": "Stream Utils",
-  "description": "This module adds extra (such as hp) and custom overlays to the /stream page.",
-  "version": "0.1.0",
+  "description": "This module adds extra (such as hp) and custom overlays to the /stream page and also allows you to disable modules on the /stream page",
+  "version": "1.0.0",
   "author": "ardittristan#0001",
   "scripts": ["streamUtils.js", "./lib/ace/ace.js"],
   "styles": ["./css/streamUtils.css"],
-  "languages": [{
-    "lang": "en",
-    "name": "English",
-    "path": "./lang/en.json"
-  }],
+  "languages": [
+    {
+      "lang": "en",
+      "name": "English",
+      "path": "./lang/en.json"
+    }
+  ],
   "socket": true,
   "url": "https://github.com/ardittristan/VTTStreamUtils",
   "manifest": "https://raw.githubusercontent.com/ardittristan/VTTStreamUtils/master/module.json",

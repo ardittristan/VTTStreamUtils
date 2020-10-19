@@ -10,6 +10,10 @@
         "label": "Open Actor List - Global",
         "hint": "Global fallback actor list if client list is empty"
       },
+      "disabledModules": {
+        "name": "Disabled Modules",
+        "hint": "Comma seperated list of .js file names or module directory names you don't want to load the scripts from. Sometimes you might have to refresh the stream page for the new settings to appear."
+      },
       "enableHpView": {
         "name": "Enable HP View"
       },
