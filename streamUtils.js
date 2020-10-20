@@ -1,10 +1,13 @@
 if (window.location.pathname.includes("/stream")) {
+  // disable user disabled modules
   disableModules();
+  // check for chat log to appear and then run main code
   observe("#chat-log", main);
 }
 
 function main() {
   $("body").append($('<div class="streamUtils"></div>'));
+  registerHelpers();
   healthInfo();
   applyCss();
   customInfo();
@@ -13,10 +16,31 @@ function main() {
 }
 
 /*******************************************************/
+//@section register handlebars helpers
+/*******************************************************/
+
+//#region
+async function registerHelpers() {
+  Handlebars.registerHelper("getProperty", function (data, property) {
+    return getProperty(data, property);
+  });
+  Handlebars.registerHelper("equals", function(a, b) {
+    return a === b;
+  })
+  // for custom overlay
+  Handlebars.registerHelper("hasIcon", function (dataObject) {
+    return hasIcon(dataObject);
+  });
+}
+//#endregion
+
+/*******************************************************/
 //@section disable audio
 /*******************************************************/
 
+//#region
 async function disableAudio() {
+  // disables audio since it doesn't work on /stream anyway
   AudioHelper.getAudioContext = function () {
     if (this._audioContext) return this._audioContext;
     return null;
@@ -25,6 +49,7 @@ async function disableAudio() {
     return;
   };
 }
+//#endregion
 
 /*******************************************************/
 //@section disable modules
@@ -32,13 +57,17 @@ async function disableAudio() {
 
 //#region
 async function disableModules() {
+  // gets filter settings from local storage since game settings load too late
   const filter = localStorage.getItem("streamutilsDisabledModules").split(",");
+  // filter always has at least a lenght of 1 with "" in it because of default settings, so checking if first entry in array has content
   if (filter?.[0]?.length === 0 || filter?.[0]?.length === undefined) return;
+  // hack to disable scripts that load after this script
   new MutationObserver((mutations) => {
     mutations.forEach(({ addedNodes }) => {
       addedNodes.forEach((node) => {
         if (node.nodeType === 1 && node.tagName === "SCRIPT") {
           const src = node.src || "";
+          // filter gets checked here
           if (stringIncludesArray(src, filter)) {
             node.type = "javascript/blocked";
 
@@ -59,6 +88,8 @@ async function disableModules() {
 }
 
 /**
+ * @description checks if string includes any string in the array
+ *
  * @param {String} string
  * @param {String[]} array
  */
@@ -75,9 +106,11 @@ function stringIncludesArray(string, array) {
 //@section apply css
 /*******************************************************/
 
+//#region
 async function applyCss() {
   $("head").append($(`<style>${game.settings.get("0streamutils", "cssEditor")}</style>`));
 }
+//#endregion
 
 /*******************************************************/
 //@section custom info
@@ -86,44 +119,34 @@ async function applyCss() {
 //#region
 async function customInfo() {
   if (!game.settings.get("0streamutils", "enableCustom")) return;
+  // preload template
+  await getTemplate("modules/0streamutils/templates/customOverlay.html")
   /** @type {import('./docs/settings').SettingsObject[]} */
   let settings = JSON.parse(game.settings.get("0streamutils", "jsonEditor"));
   if (settings.length === 0) return;
 
+  // for each entry in the JSON settings object
   settings.forEach((setting) => {
     if (setting.actorList === false) {
       // if it has custom entries
       $(".streamUtils").append($(`<section class="customApp" id="${setting.id}"><table id="${setting.id}App"></table></section>`));
-      setting.data.forEach((entry) => {
-        let entries = "";
-
-        entry.rowData.forEach((dataObject) => {
-          entries =
-            entries +
-            `
-            <td>
-              <div class="${dataObject.name} number" id="${setting.id}App${entry.rowName}${dataObject.name}">
-                ${hasIcon(dataObject)} ${getProperty(window, dataObject.path)}
-              </div>
-            </td>
-          `;
+      setting.data.forEach(async (entry) => {
+        let template = await renderTemplate("modules/0streamutils/templates/customOverlay.html", {
+          iterator: entry.rowData,
+          appId: setting.id,
+          rowId: entry.rowName,
+          name: entry.rowName,
+          iconObj: window,
         });
 
-        $(`#${setting.id}App`).append(
-          $(`
-            <tr class="playerRow">
-              ${entries}
-              <td>
-                ${entry.rowName}
-              </td>
-            </tr>
-          `)
-        );
+        $(`#${setting.id}App`).append(template);
       });
 
+      // update data every 5 sec after initializing
       setInterval(() => {
         setting.data.forEach((entry) => {
           entry.rowData.forEach((dataObject) => {
+            // searches and replaces element with actor info
             let element = document.getElementById(`${setting.id}App${entry.rowName}${dataObject.name}`);
             if (element) {
               element.innerHTML = `${hasIcon(dataObject)} ${getProperty(window, dataObject.path)}`;
@@ -134,35 +157,21 @@ async function customInfo() {
     } else {
       // if it uses the actor list as entries
       $(".streamUtils").append($(`<section class="customApp" id="${setting.id}"><table id="${setting.id}App"></table></section>`));
-      game.actors.forEach((actor) => {
+      game.actors.forEach(async (actor) => {
         if (
+          // check if actor list is defined
           game.settings.get("0streamutils", "checkedList")[0].includes(actor.id) ||
           (game.settings.get("0streamutils", "checkedList")[0].length === 0 && game.settings.get("0streamutils", "globalCheckedList")[0].includes(actor.id))
         ) {
-          let entries = "";
-
-          setting.data.forEach((dataObject) => {
-            entries =
-              entries +
-              `
-              <td>
-                <div class="${dataObject.name} number" id="${setting.id}App${actor.id}${dataObject.name}">
-                  ${hasIcon(dataObject)} ${getProperty(actor, dataObject.path)}
-                </div>
-              </td>
-            `;
+          let template = await renderTemplate("modules/0streamutils/templates/customOverlay.html", {
+            iterator: setting.data,
+            appId: setting.id,
+            rowId: actor.id,
+            name: actor.name,
+            iconObj: actor,
           });
 
-          $(`#${setting.id}App`).append(
-            $(`
-              <tr class="playerRow">
-                ${entries}
-                <td>
-                  ${actor.name}
-                </td>
-              </tr>
-            `)
-          );
+          $(`#${setting.id}App`).append(template);
         }
       });
 
@@ -211,7 +220,6 @@ function hasIconColor(dataObject) {
 //#region
 async function combatTracker() {
   if (!game.settings.get("0streamutils", "enableTracker")) return;
-  game.socket.emit("module.0streamutils", { getData: true });
 
   ui.combat = new CombatOverlay();
   ui.combat.render(true);
@@ -223,8 +231,11 @@ class CombatOverlay extends CombatTracker {
     /** @type {Scene} */
     this.currentScene = null;
 
+    // emit request for getting current scene info
+    game.socket.emit("module.0streamutils", { getData: true });
     game.socket.on("module.0streamutils", (data) => {
       if (data.sendData) {
+        // when info received
         this.currentScene = data.currentScene;
         this.render();
       }
@@ -243,6 +254,7 @@ class CombatOverlay extends CombatTracker {
   async getData(options) {
     let data = await super.getData(options);
 
+    // replace data that doesn't exist on /stream with the required data
     const view = this.currentScene || null;
     const combats = view ? game.combats.entities.filter((c) => c.data.scene === view._id) : [];
 
@@ -259,6 +271,7 @@ class CombatOverlay extends CombatTracker {
     }
   }
 
+  // append to it's container div on the first render
   async firstRender() {
     while (!this._element) {
       await sleep(50);
@@ -267,6 +280,7 @@ class CombatOverlay extends CombatTracker {
     this.render();
   }
 
+  // disable since it was spitting errors and you don't hover in stream overlay
   _onCombatantHover() {}
 }
 //#endregion
@@ -278,26 +292,21 @@ class CombatOverlay extends CombatTracker {
 //#region
 async function healthInfo() {
   if (!game.settings.get("0streamutils", "enableHpView")) return;
+  await getTemplate("modules/0streamutils/templates/hpOverlay.html");
   $(".streamUtils").append($('<section id="hp"><table id="hpApp"></table></section>'));
-  game.actors.forEach((actor) => {
+  game.actors.forEach(async (actor) => {
     if (
+      // check if actor list is defined
       game.settings.get("0streamutils", "checkedList")[0].includes(actor.id) ||
       (game.settings.get("0streamutils", "checkedList")[0].length === 0 && game.settings.get("0streamutils", "globalCheckedList")[0].includes(actor.id))
     ) {
-      $("#hpApp").append(
-        $(`
-          <tr class="playerRow">
-            <td>
-              <div class="hp" id="hpApp${actor.id}">
-                ${getHPString(getProperty(actor, game.settings.get("0streamutils", "hpPath")), getProperty(actor, game.settings.get("0streamutils", "maxHpPath")))}
-              </div>
-            </td>
-            <td>
-              ${actor.name}
-            </td>
-          </tr>
-        `)
-      );
+      let template = await renderTemplate("modules/0streamutils/templates/hpOverlay.html", {
+        actor: actor,
+        hp: getProperty(actor, game.settings.get("0streamutils", "hpPath")),
+        maxHp: getProperty(actor, game.settings.get("0streamutils", "maxHpPath"))
+      });
+
+      $("#hpApp").append(template);
     }
   });
 
@@ -332,7 +341,9 @@ function getHPString(health, maxHealth) {
 // @section ingame part
 /*******************************************************/
 
+//#region
 Hooks.once("init", () => {
+  // actor list settings
   game.settings.register("0streamutils", "checkedList", {
     scope: "client",
     type: Array,
@@ -438,6 +449,7 @@ Hooks.once("init", () => {
 });
 
 Hooks.once("ready", () => {
+  // emit scene info for when scene changes
   game.socket.on("module.0streamutils", (data) => {
     if (data.getData) {
       game.socket.emit("module.0streamutils", { currentScene: canvas.scene, sendData: true });
@@ -445,6 +457,12 @@ Hooks.once("ready", () => {
   });
 });
 
+/**
+ * @description application that lists all actors and lets user check and uncheck actors
+ *
+ * @class CharacterSelector
+ * @extends {FormApplication}
+ */
 class CharacterSelector extends FormApplication {
   constructor(options = {}) {
     super(options);
@@ -512,16 +530,19 @@ class CharacterSelector extends FormApplication {
     this.setList(checkedList);
   }
 
+  // gets setting and sets current value to it
   /** @return {String[]} */
   getList() {
     return game.settings.get("0streamutils", "checkedList")?.[0];
   }
 
+  // sets setting to current value
   setList(checkedList) {
     game.settings.set("0streamutils", "checkedList", checkedList);
   }
 }
 
+// same as above but different settings
 class GlobalCharacterSelector extends CharacterSelector {
   getList() {
     return game.settings.get("0streamutils", "globalCheckedList")?.[0];
@@ -532,6 +553,12 @@ class GlobalCharacterSelector extends CharacterSelector {
   }
 }
 
+/**
+ * @description settings window that includes 2 ace editors
+ *
+ * @class CustomEditor
+ * @extends {FormApplication}
+ */
 class CustomEditor extends FormApplication {
   constructor(object = {}, options = {}) {
     super(object, options);
@@ -559,8 +586,10 @@ class CustomEditor extends FormApplication {
   activateListeners(html) {
     super.activateListeners(html);
 
+    // inserts ace editors into html
     this.initEditorHtml();
 
+    // save functionality
     html.find("button.save-button").on("click", () => {
       this.sendToSettings();
     });
@@ -573,6 +602,8 @@ class CustomEditor extends FormApplication {
   }
 
   /**
+   * @description checks if already saved on close
+   *
    * @override
    * @private
    */
@@ -618,6 +649,7 @@ class CustomEditor extends FormApplication {
   }
 
   createEditor(name, mode) {
+    // adds editor to array of editors for later reference
     this.editorArray[name] = ace.edit(name);
     this.editorArray[name].setOptions({
       mode: mode,
@@ -625,7 +657,9 @@ class CustomEditor extends FormApplication {
       showPrintMargin: false,
       enableLiveAutocompletion: true,
     });
+    // sets text in editor to the text in setting
     this.editorArray[name].setValue(game.settings.get("0streamutils", name), -1);
+    // add saving with ctrl s
     this.editorArray[name].commands.addCommand({
       name: "Save",
       bindKey: { win: "Ctrl-S", mac: "Command-S" },
@@ -634,15 +668,17 @@ class CustomEditor extends FormApplication {
     this.editorArray[name].getSession().on("change", () => {
       if (!this.unsaved) this.unsaved = true;
     });
+    // resizes editor if container changes size
     new ResizeObserver(() => {
       this.editorArray[name].resize();
       this.editorArray[name].renderer.updateFull();
     }).observe(this.editorArray[name].container);
   }
 }
+//#endregion
 
 /*******************************************************/
-// @section ace multimodule compat
+// @section ace multi-module compat
 /*******************************************************/
 
 //#region
@@ -683,6 +719,12 @@ function setAceModules(stringArray) {
 /*******************************************************/
 
 //#region
+
+/**
+ * @description combines with await pauses code for set timeout
+ *
+ * @param {Number} ms
+ */
 async function sleep(ms) {
   return new Promise((resolve) => {
     setTimeout(resolve, ms);

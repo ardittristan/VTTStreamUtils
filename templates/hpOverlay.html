@@ -1,0 +1,10 @@
+<tr class="playerRow">
+  <td>
+    <div class="hp" id="hpApp{{actor.id}}">
+      {{#if (equals hp 0)}}<i class="fas fa-skull"></i>{{else}}<i class="fas fa-heart"></i>{{/if}} {{hp}}/{{maxHp}}
+    </div>
+  </td>
+  <td>
+    {{actor.name}}
+  </td>
+</tr>

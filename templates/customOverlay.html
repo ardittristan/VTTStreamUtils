@@ -1,0 +1,12 @@
+<tr class="playerRow">
+  {{#each iterator}}
+  <td>
+    <div class="{{this.name}} number" id="{{@root.appId}}App{{@root.rowId}}{{this.name}}">
+      {{{hasIcon this}}} {{{getProperty @root.iconObj this.path}}}
+    </div>
+  </td>
+  {{/each}}
+  <td>
+    {{name}}
+  </td>
+</tr>

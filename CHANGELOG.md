@@ -1,5 +1,11 @@
 # Patch Notes
 
+## Version 1.1.1
+
+* Replace a lot of inline html with handlebars
+
+* Add comments
+
 ## Version 1.1.0
 
 * Add combat tracker overlay
