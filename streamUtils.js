@@ -8,6 +8,22 @@ function main() {
   healthInfo();
   applyCss();
   customInfo();
+  combatTracker();
+  disableAudio();
+}
+
+/*******************************************************/
+//@section disable audio
+/*******************************************************/
+
+async function disableAudio() {
+  AudioHelper.getAudioContext = function () {
+    if (this._audioContext) return this._audioContext;
+    return null;
+  };
+  AudioHelper.play = function () {
+    return;
+  };
 }
 
 /*******************************************************/
@@ -192,10 +208,68 @@ function hasIconColor(dataObject) {
 //@section combat tracker
 /*******************************************************/
 
-// async function combatTracker() {
-//   if (!game.settings.get("0streamutils", "enableTracker")) return;
+//#region
+async function combatTracker() {
+  if (!game.settings.get("0streamutils", "enableTracker")) return;
+  game.socket.emit("module.0streamutils", { getData: true });
 
-// }
+  ui.combat = new CombatOverlay();
+  ui.combat.render(true);
+}
+
+class CombatOverlay extends CombatTracker {
+  constructor(options) {
+    super(options);
+    /** @type {Scene} */
+    this.currentScene = null;
+
+    game.socket.on("module.0streamutils", (data) => {
+      if (data.sendData) {
+        this.currentScene = data.currentScene;
+        this.render();
+      }
+    });
+  }
+
+  static get defaultOptions() {
+    return mergeObject(super.defaultOptions, {
+      id: "combat",
+      template: "modules/0streamutils/templates/combatTracker.html",
+      title: "Combat Tracker",
+      scrollY: [".directory-list"],
+    });
+  }
+
+  async getData(options) {
+    let data = await super.getData(options);
+
+    const view = this.currentScene || null;
+    const combats = view ? game.combats.entities.filter((c) => c.data.scene === view._id) : [];
+
+    data.combats = combats;
+    data.combatCount = combats.length;
+
+    return data;
+  }
+
+  render(force, options = {}) {
+    super.render(force, options);
+    if (force) {
+      this.firstRender();
+    }
+  }
+
+  async firstRender() {
+    while (!this._element) {
+      await sleep(50);
+    }
+    this._element.appendTo(".streamUtils");
+    this.render();
+  }
+
+  _onCombatantHover() {}
+}
+//#endregion
 
 /*******************************************************/
 //@section health info
@@ -323,13 +397,13 @@ Hooks.once("init", () => {
   });
 
   // encounter module settings
-  // game.settings.register("0streamutils", "enableTracker", {
-  //   name: "Enable Combat Tracker",
-  //   scope: "client",
-  //   type: Boolean,
-  //   default: true,
-  //   config: true,
-  // });
+  game.settings.register("0streamutils", "enableTracker", {
+    name: "streamUtils.settings.enableTracker.name",
+    scope: "client",
+    type: Boolean,
+    default: true,
+    config: true,
+  });
 
   // custom module settings
   game.settings.registerMenu("0streamutils", "customEditor", {
@@ -361,6 +435,14 @@ Hooks.once("init", () => {
     default: "[\n    \n]",
   });
   if (game.settings.get("0streamutils", "jsonEditor").length === 0) game.settings.set("0streamutils", "jsonEditor", "[\n    \n]");
+});
+
+Hooks.once("ready", () => {
+  game.socket.on("module.0streamutils", (data) => {
+    if (data.getData) {
+      game.socket.emit("module.0streamutils", { currentScene: canvas.scene, sendData: true });
+    }
+  });
 });
 
 class CharacterSelector extends FormApplication {
@@ -592,6 +674,18 @@ function setAceModules(stringArray) {
   stringArray.forEach((data) => {
     ace.config.setModuleUrl(data[0], scriptLocation.concat(data[1]));
     ace.config.loadModule(data[0]);
+  });
+}
+//#endregion
+
+/*******************************************************/
+// @section global functions
+/*******************************************************/
+
+//#region
+async function sleep(ms) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, ms);
   });
 }
 //#endregion

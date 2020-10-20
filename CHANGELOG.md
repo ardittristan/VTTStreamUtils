@@ -1,5 +1,11 @@
 # Patch Notes
 
+## Version 1.1.0
+
+* Add combat tracker overlay
+
+* Disable audio context since it didn't work anyway
+
 ## Version 1.0.4
 
 * Final empty filter fix

@@ -15,8 +15,12 @@ body.stream > .tab[data-tab] {
   top: 0;
 }
 
-body.stream section#chat {
+body.stream > section#chat {
   left: 0;
+}
+
+body.stream > section#combat {
+  display: none;
 }
 
 .streamUtils {
@@ -27,9 +31,40 @@ body.stream section#chat {
   flex-wrap: wrap;
 }
 
-.streamUtils section {
+.streamUtils section,
+body.stream .streamUtils .tab[data-tab] {
   position: relative;
   margin: 20px 40px 20px 20px;
+  height: fit-content;
+}
+
+/*
+@section combat tracker
+*/
+
+body.stream .streamUtils #combat.tab[data-tab] {
+  top: 0;
+  width: 250px;
+}
+
+body.stream .streamUtils #combat li.combatant .token-initiative .initiative {
+  font-family: "Lemonada", cursive;
+  text-shadow: none;
+}
+
+body.stream .streamUtils #combat li.combatant .token-name {
+  text-shadow: none;
+  font-size: 115%;
+  font-family: "Berkshire Swash", cursive;
+}
+
+body.stream .streamUtils #combat li.combatant.active,
+body.stream .streamUtils #combat li.combatant.active:hover {
+  background: rgba(255, 255, 255, 0.2)
+}
+
+body.stream .streamUtils #combat li.combatant:hover {
+  background: none;
 }
 
 /*

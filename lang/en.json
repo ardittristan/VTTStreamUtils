@@ -25,6 +25,9 @@
         "name": "Max HP Path",
         "hint": "The path to the max hp variable"
       },
+      "enableTracker": {
+        "name": "Enable Combat Tracker"
+      },
       "customEditor": {
         "name": "Custom Overlay Editor",
         "label": "Open Editor",
