@@ -1,2 +1,1 @@
-special-vendored-path/* linguist-vendored
-(^|/)lib/ linguist-vendored=false
+lib/* linguist-vendored
