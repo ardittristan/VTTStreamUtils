@@ -1,5 +1,9 @@
 # Patch Notes
 
+## Version 1.1.2
+
+* Push compatible core version
+
 ## Version 1.1.1
 
 * Replace a lot of inline html with handlebars
