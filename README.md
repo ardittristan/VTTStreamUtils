@@ -35,6 +35,19 @@ It is possible to create custom overlays, while this does require some knowledge
 
 Sometimes modules don't play well with the /stream view, you can disable them by adding their identifier name to the disable setting. This setting only disables them on the /stream page
 
+<details>
+
+<summary>How to find the module identifier</summary>
+
+To get the id of a module, press `F12` and open the console tab. Then in the console tab, type `game.modules`, a map object should appear:  
+![image](docs/image/README/1603390217728.png)  
+If you click on the arrow it should expand to a list:  
+![image](docs/image/README/1603390254165.png)  
+The names in this list are the module identifiers, if you have no idea what module corresponds to a module idea, you can open it and find the name in it's data:  
+![image](docs/image/README/1603390352409.png)
+
+</details>
+
 ## Changelog
 
 Check the [Changelog](https://github.com/ardittristan/VTTStreamUtils/blob/master/CHANGELOG.md)
