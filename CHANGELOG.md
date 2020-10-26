@@ -1,5 +1,9 @@
 # Patch Notes
 
+## Version 1.1.3
+
+* Fix firefox ace compat
+
 ## Version 1.1.2
 
 * Push compatible core version
