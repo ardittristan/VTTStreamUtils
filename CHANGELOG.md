@@ -1,5 +1,9 @@
 # Patch Notes
 
+## Version 1.1.4
+
+* Temp fix for canvas undefined check not triggering in Token _cleanData function.
+
 ## Version 1.1.3
 
 * Fix firefox ace compat

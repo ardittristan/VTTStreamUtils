@@ -24,9 +24,9 @@ async function registerHelpers() {
   Handlebars.registerHelper("getProperty", function (data, property) {
     return getProperty(data, property);
   });
-  Handlebars.registerHelper("equals", function(a, b) {
+  Handlebars.registerHelper("equals", function (a, b) {
     return a === b;
-  })
+  });
   // for custom overlay
   Handlebars.registerHelper("hasIcon", function (dataObject) {
     return hasIcon(dataObject);
@@ -120,7 +120,7 @@ async function applyCss() {
 async function customInfo() {
   if (!game.settings.get("0streamutils", "enableCustom")) return;
   // preload template
-  await getTemplate("modules/0streamutils/templates/customOverlay.html")
+  await getTemplate("modules/0streamutils/templates/customOverlay.html");
   /** @type {import('./docs/settings').SettingsObject[]} */
   let settings = JSON.parse(game.settings.get("0streamutils", "jsonEditor"));
   if (settings.length === 0) return;
@@ -283,6 +283,18 @@ class CombatOverlay extends CombatTracker {
   // disable since it was spitting errors and you don't hover in stream overlay
   _onCombatantHover() {}
 }
+
+Token.prototype._cleanData = function () {
+  // Constrain dimensions
+  this.data.width = Math.max((this.data.width || 1).toNearest(0.5), 0.5);
+  this.data.height = Math.max((this.data.height || 1).toNearest(0.5), 0.5);
+
+  // Constrain canvas coordinates
+  if (!canvas?.ready || !this.scene?.active) return;
+  const d = canvas.dimensions;
+  this.data.x = Math.clamped(Math.round(this.data.x), 0, d.width - this.w);
+  this.data.y = Math.clamped(Math.round(this.data.y), 0, d.height - this.h);
+};
 //#endregion
 
 /*******************************************************/
@@ -303,7 +315,7 @@ async function healthInfo() {
       let template = await renderTemplate("modules/0streamutils/templates/hpOverlay.html", {
         actor: actor,
         hp: getProperty(actor, game.settings.get("0streamutils", "hpPath")),
-        maxHp: getProperty(actor, game.settings.get("0streamutils", "maxHpPath"))
+        maxHp: getProperty(actor, game.settings.get("0streamutils", "maxHpPath")),
       });
 
       $("#hpApp").append(template);
