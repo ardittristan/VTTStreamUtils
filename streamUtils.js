@@ -160,8 +160,8 @@ async function customInfo() {
       game.actors.forEach(async (actor) => {
         if (
           // check if actor list is defined
-          game.settings.get("0streamutils", "checkedList")[0].includes(actor.id) ||
-          (game.settings.get("0streamutils", "checkedList")[0].length === 0 && game.settings.get("0streamutils", "globalCheckedList")[0].includes(actor.id))
+          game.settings.get("0streamutils", "checkedList").includes(actor.id) ||
+          (game.settings.get("0streamutils", "checkedList").length === 0 && game.settings.get("0streamutils", "globalCheckedList").includes(actor.id))
         ) {
           let template = await renderTemplate("modules/0streamutils/templates/customOverlay.html", {
             iterator: setting.data,
@@ -178,8 +178,8 @@ async function customInfo() {
       setInterval(() => {
         game.actors.forEach((actor) => {
           if (
-            game.settings.get("0streamutils", "checkedList")[0].includes(actor.id) ||
-            (game.settings.get("0streamutils", "checkedList")[0].length === 0 && game.settings.get("0streamutils", "globalCheckedList")[0].includes(actor.id))
+            game.settings.get("0streamutils", "checkedList").includes(actor.id) ||
+            (game.settings.get("0streamutils", "checkedList").length === 0 && game.settings.get("0streamutils", "globalCheckedList").includes(actor.id))
           ) {
             setting.data.forEach((dataObject) => {
               let element = document.getElementById(`${setting.id}App${actor.id}${dataObject.name}`);
@@ -309,8 +309,8 @@ async function healthInfo() {
   game.actors.forEach(async (actor) => {
     if (
       // check if actor list is defined
-      game.settings.get("0streamutils", "checkedList")[0].includes(actor.id) ||
-      (game.settings.get("0streamutils", "checkedList")[0].length === 0 && game.settings.get("0streamutils", "globalCheckedList")[0].includes(actor.id))
+      game.settings.get("0streamutils", "checkedList").includes(actor.id) ||
+      (game.settings.get("0streamutils", "checkedList").length === 0 && game.settings.get("0streamutils", "globalCheckedList").includes(actor.id))
     ) {
       let template = await renderTemplate("modules/0streamutils/templates/hpOverlay.html", {
         actor: actor,
@@ -325,8 +325,8 @@ async function healthInfo() {
   setInterval(() => {
     game.actors.forEach((actor) => {
       if (
-        game.settings.get("0streamutils", "checkedList")[0].includes(actor.id) ||
-        (game.settings.get("0streamutils", "checkedList")[0].length === 0 && game.settings.get("0streamutils", "globalCheckedList")[0].includes(actor.id))
+        game.settings.get("0streamutils", "checkedList").includes(actor.id) ||
+        (game.settings.get("0streamutils", "checkedList").length === 0 && game.settings.get("0streamutils", "globalCheckedList").includes(actor.id))
       ) {
         let element = document.getElementById(`hpApp${actor.id}`);
         if (element) {
@@ -545,7 +545,7 @@ class CharacterSelector extends FormApplication {
   // gets setting and sets current value to it
   /** @return {String[]} */
   getList() {
-    return game.settings.get("0streamutils", "checkedList")?.[0];
+    return game.settings.get("0streamutils", "checkedList");
   }
 
   // sets setting to current value
@@ -557,7 +557,7 @@ class CharacterSelector extends FormApplication {
 // same as above but different settings
 class GlobalCharacterSelector extends CharacterSelector {
   getList() {
-    return game.settings.get("0streamutils", "globalCheckedList")?.[0];
+    return game.settings.get("0streamutils", "globalCheckedList");
   }
 
   setList(checkedList) {
