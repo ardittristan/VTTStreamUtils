@@ -1,5 +1,9 @@
 # Patch Notes
 
+## Version 2.0.0
+
+* 0.8 compat.
+
 ## Version 1.1.4
 
 * Temp fix for canvas undefined check not triggering in Token _cleanData function.

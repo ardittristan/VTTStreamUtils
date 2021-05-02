@@ -1,0 +1,19 @@
+body.stream .customApp table {
+  width: max-content;
+  border: none;
+  background: none;
+  font-family: "Berkshire Swash", cursive;
+}
+
+body.stream .customApp .number {
+  margin-right: 0.75em;
+  font-family: "Lemonada", cursive;
+}
+
+body.stream .customApp tr.playerRow {
+  background-color: unset;
+}
+
+body.stream .customApp .playerRow td:last-of-type {
+  padding-bottom: 0.45em;
+}

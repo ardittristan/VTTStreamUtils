@@ -1,0 +1,29 @@
+body.stream #hpApp {
+  width: max-content;
+  border: none;
+  background: none;
+  font-family: "Berkshire Swash", cursive;
+}
+
+body.stream #hpApp .hp {
+  margin-right: 0.75em;
+  font-family: "Lemonada", cursive;
+}
+
+body.stream #hpApp .hp .fas.fa-heart {
+  font-size: 88%;
+  color: red;
+}
+
+body.stream #hpApp .hp .fas.fa-skull {
+  font-size: 90%;
+  color: lightgrey;
+}
+
+body.stream #hpApp tr {
+  background-color: unset;
+}
+
+body.stream #hpApp tr td:last-of-type {
+  padding-bottom: 0.45em;
+}

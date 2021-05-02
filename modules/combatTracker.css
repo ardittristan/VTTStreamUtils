@@ -1,0 +1,24 @@
+body.stream .streamUtils #combat.tab[data-tab] {
+  top: 0;
+  width: 250px;
+}
+
+body.stream .streamUtils #combat li.combatant .token-initiative .initiative {
+  font-family: "Lemonada", cursive;
+  text-shadow: none;
+}
+
+body.stream .streamUtils #combat li.combatant .token-name {
+  text-shadow: none;
+  font-size: 115%;
+  font-family: "Berkshire Swash", cursive;
+}
+
+body.stream .streamUtils #combat li.combatant.active,
+body.stream .streamUtils #combat li.combatant.active:hover {
+  background: rgba(255, 255, 255, 0.2)
+}
+
+body.stream .streamUtils #combat li.combatant:hover {
+  background: none;
+}

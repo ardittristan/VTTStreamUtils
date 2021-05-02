@@ -1,6 +1,11 @@
+import registerHelpers from "./modules/registerHelpers.js";
+import disableAudio from "./modules/disableAudio.js";
+import applyCss from "./modules/applyCss.js";
+import customInfo from "./modules/customInfo.js";
+import combatTracker from "./modules/combatTracker.js";
+import healthInfo from "./modules/healthInfo.js";
+
 if (window.location.pathname.includes("/stream")) {
-  // disable user disabled modules
-  disableModules();
   // check for chat log to appear and then run main code
   observe("#chat-log", main);
 }
@@ -14,340 +19,6 @@ function main() {
   combatTracker();
   disableAudio();
 }
-
-/*******************************************************/
-//@section register handlebars helpers
-/*******************************************************/
-
-//#region
-async function registerHelpers() {
-  Handlebars.registerHelper("getProperty", function (data, property) {
-    return getProperty(data, property);
-  });
-  Handlebars.registerHelper("equals", function (a, b) {
-    return a === b;
-  });
-  // for custom overlay
-  Handlebars.registerHelper("hasIcon", function (dataObject) {
-    return hasIcon(dataObject);
-  });
-}
-//#endregion
-
-/*******************************************************/
-//@section disable audio
-/*******************************************************/
-
-//#region
-async function disableAudio() {
-  // disables audio since it doesn't work on /stream anyway
-  AudioHelper.getAudioContext = function () {
-    if (this._audioContext) return this._audioContext;
-    return null;
-  };
-  AudioHelper.play = function () {
-    return;
-  };
-}
-//#endregion
-
-/*******************************************************/
-//@section disable modules
-/*******************************************************/
-
-//#region
-async function disableModules() {
-  // gets filter settings from local storage since game settings load too late
-  const filter = localStorage.getItem("streamutilsDisabledModules").split(",");
-  // filter always has at least a lenght of 1 with "" in it because of default settings, so checking if first entry in array has content
-  if (filter?.[0]?.length === 0 || filter?.[0]?.length === undefined) return;
-  // hack to disable scripts that load after this script
-  new MutationObserver((mutations) => {
-    mutations.forEach(({ addedNodes }) => {
-      addedNodes.forEach((node) => {
-        if (node.nodeType === 1 && node.tagName === "SCRIPT") {
-          const src = node.src || "";
-          // filter gets checked here
-          if (stringIncludesArray(src, filter)) {
-            node.type = "javascript/blocked";
-
-            //Firefox compat
-            const beforeScriptExecuteListener = function (event) {
-              if (node.getAttribute("type") === "javascript/blocked") event.preventDefault();
-              node.removeEventListener("beforescriptexecute", beforeScriptExecuteListener);
-            };
-            node.addEventListener("beforescriptexecute", beforeScriptExecuteListener);
-          }
-        }
-      });
-    });
-  }).observe(document.documentElement, {
-    childList: true,
-    subtree: true,
-  });
-}
-
-/**
- * @description checks if string includes any string in the array
- *
- * @param {String} string
- * @param {String[]} array
- */
-function stringIncludesArray(string, array) {
-  let included = false;
-  array.forEach((entry) => {
-    if (string.includes(entry)) included = true;
-  });
-  return included;
-}
-//#endregion
-
-/*******************************************************/
-//@section apply css
-/*******************************************************/
-
-//#region
-async function applyCss() {
-  $("head").append($(`<style>${game.settings.get("0streamutils", "cssEditor")}</style>`));
-}
-//#endregion
-
-/*******************************************************/
-//@section custom info
-/*******************************************************/
-
-//#region
-async function customInfo() {
-  if (!game.settings.get("0streamutils", "enableCustom")) return;
-  // preload template
-  await getTemplate("modules/0streamutils/templates/customOverlay.html");
-  /** @type {import('./docs/settings').SettingsObject[]} */
-  let settings = JSON.parse(game.settings.get("0streamutils", "jsonEditor"));
-  if (settings.length === 0) return;
-
-  // for each entry in the JSON settings object
-  settings.forEach((setting) => {
-    if (setting.actorList === false) {
-      // if it has custom entries
-      $(".streamUtils").append($(`<section class="customApp" id="${setting.id}"><table id="${setting.id}App"></table></section>`));
-      setting.data.forEach(async (entry) => {
-        let template = await renderTemplate("modules/0streamutils/templates/customOverlay.html", {
-          iterator: entry.rowData,
-          appId: setting.id,
-          rowId: entry.rowName,
-          name: entry.rowName,
-          iconObj: window,
-        });
-
-        $(`#${setting.id}App`).append(template);
-      });
-
-      // update data every 5 sec after initializing
-      setInterval(() => {
-        setting.data.forEach((entry) => {
-          entry.rowData.forEach((dataObject) => {
-            // searches and replaces element with actor info
-            let element = document.getElementById(`${setting.id}App${entry.rowName}${dataObject.name}`);
-            if (element) {
-              element.innerHTML = `${hasIcon(dataObject)} ${getProperty(window, dataObject.path)}`;
-            }
-          });
-        });
-      }, 5000);
-    } else {
-      // if it uses the actor list as entries
-      $(".streamUtils").append($(`<section class="customApp" id="${setting.id}"><table id="${setting.id}App"></table></section>`));
-      game.actors.forEach(async (actor) => {
-        if (
-          // check if actor list is defined
-          game.settings.get("0streamutils", "checkedList").includes(actor.id) ||
-          (game.settings.get("0streamutils", "checkedList").length === 0 && game.settings.get("0streamutils", "globalCheckedList").includes(actor.id))
-        ) {
-          let template = await renderTemplate("modules/0streamutils/templates/customOverlay.html", {
-            iterator: setting.data,
-            appId: setting.id,
-            rowId: actor.id,
-            name: actor.name,
-            iconObj: actor,
-          });
-
-          $(`#${setting.id}App`).append(template);
-        }
-      });
-
-      setInterval(() => {
-        game.actors.forEach((actor) => {
-          if (
-            game.settings.get("0streamutils", "checkedList").includes(actor.id) ||
-            (game.settings.get("0streamutils", "checkedList").length === 0 && game.settings.get("0streamutils", "globalCheckedList").includes(actor.id))
-          ) {
-            setting.data.forEach((dataObject) => {
-              let element = document.getElementById(`${setting.id}App${actor.id}${dataObject.name}`);
-              if (element) {
-                element.innerHTML = `${hasIcon(dataObject)} ${getProperty(actor, dataObject.path)}`;
-              }
-            });
-          }
-        });
-      }, 5000);
-    }
-  });
-}
-
-/** @param {import('./docs/settings').Data} dataObject */
-function hasIcon(dataObject) {
-  if (dataObject.icon && dataObject.icon.length !== 0) {
-    return `<i class="${dataObject.icon}" ${hasIconColor(dataObject)}></i>`;
-  } else {
-    return "";
-  }
-}
-
-/** @param {import('./docs/settings').Data} dataObject */
-function hasIconColor(dataObject) {
-  if (dataObject.iconColor && dataObject.iconColor.length !== 0) {
-    return `style="color: ${dataObject.iconColor};"`;
-  } else {
-    return "";
-  }
-}
-//#endregion
-
-/*******************************************************/
-//@section combat tracker
-/*******************************************************/
-
-//#region
-async function combatTracker() {
-  if (!game.settings.get("0streamutils", "enableTracker")) return;
-
-  ui.combat = new CombatOverlay();
-  ui.combat.render(true);
-}
-
-class CombatOverlay extends CombatTracker {
-  constructor(options) {
-    super(options);
-    /** @type {Scene} */
-    this.currentScene = null;
-
-    // emit request for getting current scene info
-    game.socket.emit("module.0streamutils", { getData: true });
-    game.socket.on("module.0streamutils", (data) => {
-      if (data.sendData) {
-        // when info received
-        this.currentScene = data.currentScene;
-        this.render();
-      }
-    });
-  }
-
-  static get defaultOptions() {
-    return mergeObject(super.defaultOptions, {
-      id: "combat",
-      template: "modules/0streamutils/templates/combatTracker.html",
-      title: "Combat Tracker",
-      scrollY: [".directory-list"],
-    });
-  }
-
-  async getData(options) {
-    let data = await super.getData(options);
-
-    // replace data that doesn't exist on /stream with the required data
-    const view = this.currentScene || null;
-    const combats = view ? game.combats.entities.filter((c) => c.data.scene === view._id) : [];
-
-    data.combats = combats;
-    data.combatCount = combats.length;
-
-    return data;
-  }
-
-  render(force, options = {}) {
-    super.render(force, options);
-    if (force) {
-      this.firstRender();
-    }
-  }
-
-  // append to it's container div on the first render
-  async firstRender() {
-    while (!this._element) {
-      await sleep(50);
-    }
-    this._element.appendTo(".streamUtils");
-    this.render();
-  }
-
-  // disable since it was spitting errors and you don't hover in stream overlay
-  _onCombatantHover() {}
-}
-
-Token.prototype._cleanData = function () {
-  // Constrain dimensions
-  this.data.width = Math.max((this.data.width || 1).toNearest(0.5), 0.5);
-  this.data.height = Math.max((this.data.height || 1).toNearest(0.5), 0.5);
-
-  // Constrain canvas coordinates
-  if (!canvas?.ready || !this.scene?.active) return;
-  const d = canvas.dimensions;
-  this.data.x = Math.clamped(Math.round(this.data.x), 0, d.width - this.w);
-  this.data.y = Math.clamped(Math.round(this.data.y), 0, d.height - this.h);
-};
-//#endregion
-
-/*******************************************************/
-//@section health info
-/*******************************************************/
-
-//#region
-async function healthInfo() {
-  if (!game.settings.get("0streamutils", "enableHpView")) return;
-  await getTemplate("modules/0streamutils/templates/hpOverlay.html");
-  $(".streamUtils").append($('<section id="hp"><table id="hpApp"></table></section>'));
-  game.actors.forEach(async (actor) => {
-    if (
-      // check if actor list is defined
-      game.settings.get("0streamutils", "checkedList").includes(actor.id) ||
-      (game.settings.get("0streamutils", "checkedList").length === 0 && game.settings.get("0streamutils", "globalCheckedList").includes(actor.id))
-    ) {
-      let template = await renderTemplate("modules/0streamutils/templates/hpOverlay.html", {
-        actor: actor,
-        hp: getProperty(actor, game.settings.get("0streamutils", "hpPath")),
-        maxHp: getProperty(actor, game.settings.get("0streamutils", "maxHpPath")),
-      });
-
-      $("#hpApp").append(template);
-    }
-  });
-
-  setInterval(() => {
-    game.actors.forEach((actor) => {
-      if (
-        game.settings.get("0streamutils", "checkedList").includes(actor.id) ||
-        (game.settings.get("0streamutils", "checkedList").length === 0 && game.settings.get("0streamutils", "globalCheckedList").includes(actor.id))
-      ) {
-        let element = document.getElementById(`hpApp${actor.id}`);
-        if (element) {
-          element.innerHTML = getHPString(
-            getProperty(actor, game.settings.get("0streamutils", "hpPath")),
-            getProperty(actor, game.settings.get("0streamutils", "maxHpPath"))
-          );
-        }
-      }
-    });
-  }, 5000);
-}
-
-function getHPString(health, maxHealth) {
-  if (health === 0) {
-    return `<i class="fas fa-skull"></i> ${health}/${maxHealth}`;
-  } else {
-    return `<i class="fas fa-heart"></i> ${health}/${maxHealth}`;
-  }
-}
-//#endregion
 
 /*******************************************************/
 // @section ingame part
@@ -745,10 +416,28 @@ function setAceModules(stringArray) {
  *
  * @param {Number} ms
  */
-async function sleep(ms) {
+export async function sleep(ms) {
   return new Promise((resolve) => {
     setTimeout(resolve, ms);
   });
+}
+
+/** @param {import('./docs/settings').Data} dataObject */
+export function hasIcon(dataObject) {
+  if (dataObject.icon && dataObject.icon.length !== 0) {
+    return `<i class="${dataObject.icon}" ${hasIconColor(dataObject)}></i>`;
+  } else {
+    return "";
+  }
+}
+
+/** @param {import('./docs/settings').Data} dataObject */
+function hasIconColor(dataObject) {
+  if (dataObject.iconColor && dataObject.iconColor.length !== 0) {
+    return `style="color: ${dataObject.iconColor};"`;
+  } else {
+    return "";
+  }
 }
 //#endregion
 
