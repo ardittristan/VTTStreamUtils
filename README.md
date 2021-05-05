@@ -5,7 +5,7 @@
 
 This module adds extra and custom overlays to the /stream page of Foundry VTT and also allows you to disable modules on the /stream page.
 
-Because of a mistake normal install for versions pre 2.0.0 are broken, please use [this manifest](https://raw.githubusercontent.com/ardittristan/VTTStreamUtils/1.1.4_fix/module.json) if you want to download version 1.1.4 for foundry 0.7
+_Because of a mistake normal install for versions pre 2.0.0 are broken, please use [this manifest](https://raw.githubusercontent.com/ardittristan/VTTStreamUtils/1.1.4_fix/module.json) if you want to download version 1.1.4 for foundry 0.7_
 
 ## Installation
 
