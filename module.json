@@ -15,8 +15,8 @@
   ],
   "socket": true,
   "url": "https://github.com/ardittristan/VTTStreamUtils",
-  "manifest": "https://raw.githubusercontent.com/ardittristan/VTTStreamUtils/master/module.json",
-  "download": "https://github.com/ardittristan/VTTStreamUtils/releases/latest/download/streamUtils.zip",
+  "manifest": "https://raw.githubusercontent.com/ardittristan/VTTStreamUtils/1.1.4_fix/module.json",
+  "download": "https://github.com/ardittristan/VTTStreamUtils/releases/1.1.4/download/streamUtilsStatic.zip",
   "minimumCoreVersion": "0.7.0",
   "compatibleCoreVersion": "0.7.9"
 }
