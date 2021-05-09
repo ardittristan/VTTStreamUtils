@@ -14,9 +14,17 @@ body.stream .streamUtils #combat li.combatant .token-name {
   font-family: "Berkshire Swash", cursive;
 }
 
+body.stream .streamUtils #combat li.combatant .token-image {
+  max-width: 100px;
+}
+
+body.stream .streamUtils #combat li.combatant {
+  margin-bottom: 7px;
+}
+
 body.stream .streamUtils #combat li.combatant.active,
 body.stream .streamUtils #combat li.combatant.active:hover {
-  background: rgba(255, 255, 255, 0.2)
+  background: rgba(255, 255, 255, 0.2);
 }
 
 body.stream .streamUtils #combat li.combatant:hover {

@@ -1,0 +1,6 @@
+body.stream .streamUtils #dice-box-canvas {
+  position: relative !important;
+  display: initial !important;
+  border: solid black thin;
+  margin-top: 20px;
+}

@@ -4,6 +4,7 @@ import applyCss from "./modules/applyCss.js";
 import customInfo from "./modules/customInfo.js";
 import combatTracker from "./modules/combatTracker.js";
 import healthInfo from "./modules/healthInfo.js";
+import diceSoNice from "./modules/diceSoNice.js";
 
 if (window.location.pathname.includes("/stream")) {
   // check for chat log to appear and then run main code
@@ -18,6 +19,7 @@ function main() {
   customInfo();
   combatTracker();
   disableAudio();
+  diceSoNice();
 }
 
 /*******************************************************/
@@ -99,6 +101,31 @@ Hooks.once("init", () => {
     config: true,
   });
 
+  // DSN module settings
+  game.settings.register("0streamutils", "enableDSN", {
+    name: "streamUtils.settings.enableDSN.name",
+    scope: "client",
+    type: Boolean,
+    default: true,
+    config: true,
+  });
+
+  game.settings.register("0streamutils", "DSNWidth", {
+    name: "streamUtils.settings.DSNWidth.name",
+    scope: "client",
+    type: Number,
+    default: 300,
+    config: true,
+  });
+
+  game.settings.register("0streamutils", "DSNHeight", {
+    name: "streamUtils.settings.DSNHeight.name",
+    scope: "client",
+    type: Number,
+    default: 300,
+    config: true,
+  });
+
   // custom module settings
   game.settings.registerMenu("0streamutils", "customEditor", {
     name: "streamUtils.settings.customEditor.name",
@@ -134,8 +161,8 @@ Hooks.once("init", () => {
 Hooks.once("ready", () => {
   // emit scene info for when scene changes
   game.socket.on("module.0streamutils", (data) => {
-    if (data.getData) {
-      game.socket.emit("module.0streamutils", { currentScene: canvas.scene, sendData: true });
+    if (data.getCombatData) {
+      game.socket.emit("module.0streamutils", { currentScene: canvas.scene, sendCombatData: true });
     }
   });
 });

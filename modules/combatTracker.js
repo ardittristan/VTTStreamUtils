@@ -14,9 +14,9 @@ class CombatOverlay extends CombatTracker {
     this.currentScene = null;
 
     // emit request for getting current scene info
-    game.socket.emit("module.0streamutils", { getData: true });
+    game.socket.emit("module.0streamutils", { getCombatData: true });
     game.socket.on("module.0streamutils", (data) => {
-      if (data.sendData) {
+      if (data.sendCombatData) {
         // when info received
         this.currentScene = data.currentScene;
         this.render();

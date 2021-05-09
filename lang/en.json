@@ -36,6 +36,15 @@
       "enableCustom": {
         "name": "Enable custom entries",
         "hint": "Enables or disables custom overlays being rendered on /stream"
+      },
+      "enableDSN": {
+        "name": "Enable Dice so Nice widget"
+      },
+      "DSNWidth": {
+        "name": "Dice so Nice widget width"
+      },
+      "DSNHeight": {
+        "name": "Dice so Nice widget height"
       }
     },
     "windows": {
