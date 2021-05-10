@@ -1,62 +1,70 @@
 # Patch Notes
 
+## Version 2.2.0
+
+- Readd 0.7 compat.
+
+## Version 2.1.0
+
+- Add Dice so Nice functionality.
+
 ## Version 2.0.0
 
-* 0.8 compat.
+- 0.8 compat.
 
 ## Version 1.1.4
 
-* Temp fix for canvas undefined check not triggering in Token _cleanData function.
+- Temp fix for canvas undefined check not triggering in Token \_cleanData function.
 
 ## Version 1.1.3
 
-* Fix firefox ace compat
+- Fix firefox ace compat
 
 ## Version 1.1.2
 
-* Push compatible core version
+- Push compatible core version
 
 ## Version 1.1.1
 
-* Replace a lot of inline html with handlebars
+- Replace a lot of inline html with handlebars
 
-* Add comments
+- Add comments
 
 ## Version 1.1.0
 
-* Add combat tracker overlay
+- Add combat tracker overlay
 
-* Disable audio context since it didn't work anyway
+- Disable audio context since it didn't work anyway
 
 ## Version 1.0.4
 
-* Final empty filter fix
+- Final empty filter fix
 
 ## Version 1.0.3
 
-* Fix empty filter again
+- Fix empty filter again
 
 ## Version 1.0.2
 
-* Fixed empty filter disabling all modules
+- Fixed empty filter disabling all modules
 
 ## Version 1.0.1
 
-* Fixed settings not being categorized. **This update will reset your settings**
+- Fixed settings not being categorized. **This update will reset your settings**
 
 ## Version 1.0.0
 
-* **Changed module name to have a higher priority in script order**
-* Added the ability to disable other modules on /stream
-* Changed custom overlay to be inside a container div
+- **Changed module name to have a higher priority in script order**
+- Added the ability to disable other modules on /stream
+- Changed custom overlay to be inside a container div
 
 ## Version 0.1.0
 
-* Added localization support
-* Added custom overlay
+- Added localization support
+- Added custom overlay
 
-* Added max hp to hp overlay
+- Added max hp to hp overlay
 
 ## Version 0.0.1
 
-* Initial release
+- Initial release

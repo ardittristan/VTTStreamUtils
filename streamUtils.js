@@ -243,7 +243,7 @@ class CharacterSelector extends FormApplication {
   // gets setting and sets current value to it
   /** @return {String[]} */
   getList() {
-    return game.settings.get("0streamutils", "checkedList");
+    return getArraySettingsCompat("0streamutils", "checkedList");
   }
 
   // sets setting to current value
@@ -465,6 +465,14 @@ function hasIconColor(dataObject) {
   } else {
     return "";
   }
+}
+
+/**
+ * @param  {string} module="0streamutils"
+ * @param  {string} key
+ */
+export function getArraySettingsCompat(module = "0streamutils", key) {
+  return game.data.version.includes("0.7.") ? game.settings.get(module, key)?.[0] || [] : game.settings.get(module, key);
 }
 //#endregion
 

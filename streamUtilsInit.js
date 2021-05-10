@@ -1,7 +1,7 @@
 if (window.location.pathname.includes("/stream")) {
   // disable user disabled modules
   disableModules();
-  initFix();
+  fix07();
 }
 
 /*******************************************************/
@@ -55,25 +55,16 @@ function stringIncludesArray(string, array) {
 }
 //#endregion
 
-/*******************************************************/
-// @section initialization fix
-/*******************************************************/
+function fix07() {
+  Token.prototype._cleanData = function () {
+    // Constrain dimensions
+    this.data.width = Math.max((this.data.width || 1).toNearest(0.5), 0.5);
+    this.data.height = Math.max((this.data.height || 1).toNearest(0.5), 0.5);
 
-//#region
-async function initFix() {
-  const origInitialize = Game.prototype.initialize
-  Game.prototype.initialize = async function() {
-    ui = ui || {};
-    ui.sidebar = ui.sidebar || {}
-    ui.sidebar.tabs = ui.sidebar.tabs || {}
-    origInitialize.apply(this)
-  }
-
-  Game.prototype._initializeStreamView = async function() {
-    if ( !SIGNED_EULA ) window.location.href = foundry.utils.getRoute("license");
-    this.initializeEntities();
-    this.activateSocketListeners();
-    ui.chat = new ChatLog({stream: true}).render(true);
-  }
+    // Constrain canvas coordinates
+    if (!canvas?.ready || !this.scene?.active) return;
+    const d = canvas.dimensions;
+    this.data.x = Math.clamped(Math.round(this.data.x), 0, d.width - this.w);
+    this.data.y = Math.clamped(Math.round(this.data.y), 0, d.height - this.h);
+  };
 }
-//#endregion

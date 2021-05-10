@@ -1,4 +1,4 @@
-import { hasIcon } from "../streamUtils.js";
+import { hasIcon, getArraySettingsCompat } from "../streamUtils.js";
 
 export default async function customInfo() {
   if (!game.settings.get("0streamutils", "enableCustom")) return;
@@ -43,8 +43,8 @@ export default async function customInfo() {
       game.actors.forEach(async (actor) => {
         if (
           // check if actor list is defined
-          game.settings.get("0streamutils", "checkedList").includes(actor.id) ||
-          (game.settings.get("0streamutils", "checkedList").length === 0 && game.settings.get("0streamutils", "globalCheckedList").includes(actor.id))
+          getArraySettingsCompat("0streamutils", "checkedList").includes(actor.id) ||
+          (getArraySettingsCompat("0streamutils", "checkedList").length === 0 && getArraySettingsCompat("0streamutils", "globalCheckedList").includes(actor.id))
         ) {
           let template = await renderTemplate("modules/0streamutils/templates/customOverlay.html", {
             iterator: setting.data,
@@ -61,8 +61,8 @@ export default async function customInfo() {
       setInterval(() => {
         game.actors.forEach((actor) => {
           if (
-            game.settings.get("0streamutils", "checkedList").includes(actor.id) ||
-            (game.settings.get("0streamutils", "checkedList").length === 0 && game.settings.get("0streamutils", "globalCheckedList").includes(actor.id))
+            getArraySettingsCompat("0streamutils", "checkedList").includes(actor.id) ||
+            (getArraySettingsCompat("0streamutils", "checkedList").length === 0 && getArraySettingsCompat("0streamutils", "globalCheckedList").includes(actor.id))
           ) {
             setting.data.forEach((dataObject) => {
               let element = document.getElementById(`${setting.id}App${actor.id}${dataObject.name}`);
