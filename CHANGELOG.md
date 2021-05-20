@@ -1,5 +1,9 @@
 # Patch Notes
 
+## Version 2.2.1
+
+- Fix DsN in 0.7.
+
 ## Version 2.2.0
 
 - Readd 0.7 compat.

@@ -11,7 +11,9 @@ export default async function diceSoNice() {
 
 function main(Dice3D) {
   game.user.color = getRandomColor();
-  canvas.initialize();
+  if (game.data.version.includes("0.7.")) {
+    canvas = new Canvas();
+  } else canvas.initialize();
 
   Dice3D.ALL_CUSTOMIZATION = function (user = game.user) {
     user.color = getRandomColor();
