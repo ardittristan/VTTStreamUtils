@@ -1,5 +1,9 @@
 # Patch Notes
 
+## Version 2.2.3
+
+- Switch to acelib.
+
 ## Version 2.2.2
 
 - Fix /stream breaking when combat tracker disabled.
