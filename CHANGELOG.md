@@ -1,5 +1,9 @@
 # Patch Notes
 
+## Version 2.2.2
+
+- Fix /stream breaking when combat tracker disabled.
+
 ## Version 2.2.1
 
 - Fix DsN in 0.7.

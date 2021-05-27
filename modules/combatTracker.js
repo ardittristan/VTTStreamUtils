@@ -1,9 +1,10 @@
 import { sleep } from "../streamUtils.js";
 
 export default async function combatTracker() {
+  ui.combat = new CombatOverlay();
+
   if (!game.settings.get("0streamutils", "enableTracker")) return;
 
-  ui.combat = new CombatOverlay();
   ui.combat.render(true);
 }
 
