@@ -44,7 +44,7 @@ To get the id of a module, press `F12` and open the console tab. Then in the con
 If you click on the arrow it should expand to a list:  
 ![image](docs/image/README/1603390254165.png)  
 The names in this list are the module identifiers, if you have no idea what module corresponds to a module idea, you can open it and find the name in it's data:  
-![image](docs/image/README/1603390352409.png)
+![image](docs/image/README/1603390352409new.png)
 
 </details>
 
