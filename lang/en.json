@@ -45,7 +45,13 @@
       },
       "DSNHeight": {
         "name": "Dice so Nice widget height"
-      }
+      },
+      "sendSettings": {
+        "name": "Send settings to other clients",
+        "label": "Open sender",
+        "hint": "Allows you to send streamutil client settings to specified users."
+      },
+      "Send": "Send"
     },
     "windows": {
       "CharacterSelector": {

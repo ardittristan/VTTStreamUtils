@@ -1,5 +1,9 @@
 # Patch Notes
 
+## Version 2.3.0
+
+- Add way of sending client side settings to stream user.
+
 ## Version 2.2.3
 
 - Switch to acelib.

@@ -1,3 +1,4 @@
+import settingsSync from "./modules/settingsSync.js";
 import registerHelpers from "./modules/registerHelpers.js";
 import disableAudio from "./modules/disableAudio.js";
 import applyCss from "./modules/applyCss.js";
@@ -14,6 +15,7 @@ if (window.location.pathname.includes("/stream")) {
 function main() {
   $("body").append($('<div class="streamUtils"></div>'));
   registerHelpers();
+  settingsSync();
   healthInfo();
   applyCss();
   customInfo();
@@ -28,6 +30,15 @@ function main() {
 
 //#region
 Hooks.once("init", () => {
+  // share settings
+  game.settings.registerMenu("0streamutils", "sendSettings", {
+    name: "streamUtils.settings.sendSettings.name",
+    label: "streamUtils.settings.sendSettings.label",
+    hint: "streamUtils.settings.sendSettings.hint",
+    type: SendSettings,
+    restricted: true,
+  });
+
   // actor list settings
   game.settings.register("0streamutils", "checkedList", {
     scope: "client",
@@ -361,12 +372,11 @@ class CustomEditor extends FormApplication {
   createEditor(name, mode) {
     // adds editor to array of editors for later reference
     this.editorArray[name] = ace.edit(name);
-    this.editorArray[name].setOptions({
-      mode: mode,
-      theme: "ace/theme/twilight",
-      showPrintMargin: false,
-      enableLiveAutocompletion: true,
-    });
+    this.editorArray[name].setOptions(
+      mergeObject(ace.userSettings, {
+        mode: mode,
+      })
+    );
     // sets text in editor to the text in setting
     this.editorArray[name].setValue(game.settings.get("0streamutils", name), -1);
     // add saving with ctrl s

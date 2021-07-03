@@ -1,0 +1,21 @@
+<form autocomplete="off" onsubmit="event.preventDefault()">
+  <div class="tableDiv">
+    <table>
+      <tr>
+        <th>Send to:</th>
+      </tr>
+      {{#each players}}
+      <tr>
+        <td>
+          <input type="checkbox" id="{{this.id}}" value="{{this.id}}" name="{{this.id}}" />
+          <label for="{{this.id}}">{{this.name}}</label>
+        </td>
+      </tr>
+      {{/each}}
+    </table>
+  </div>
+  <div class="bottomButtons">
+    <button type="submit">{{localize "streamUtils.settings.Send"}}</button>
+    <button type="button" class="cancelButton">{{localize "Cancel"}}</button>
+  </div>
+</form>
