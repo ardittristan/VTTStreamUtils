@@ -27,7 +27,7 @@ function setupGlobal() {
   Hooks.callAll("streamutilsSetupGlobal", store);
 }
 
-class SendSettings extends FormApplication {
+export class SendSettings extends FormApplication {
   static get defaultOptions() {
     return mergeObject(super.defaultOptions, {
       id: "streamutils-sender",

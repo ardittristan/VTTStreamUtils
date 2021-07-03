@@ -1,4 +1,4 @@
-import settingsSync from "./modules/settingsSync.js";
+import settingsSync, { SendSettings } from "./modules/settingsSync.js";
 import registerHelpers from "./modules/registerHelpers.js";
 import disableAudio from "./modules/disableAudio.js";
 import applyCss from "./modules/applyCss.js";
