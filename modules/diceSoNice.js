@@ -91,10 +91,16 @@ function main(Dice3D) {
 }
 
 function getRandomColor() {
-  var letters = "0123456789ABCDEF";
   var color = "#";
-  for (var i = 0; i < 6; i++) {
-    color += letters[Math.floor(Math.random() * 16)];
-  }
+  color += getRandomHex();
+  color += getRandomHex(80);
+  color += getRandomHex();
   return color;
+}
+
+function getRandomHex(max = 255) {
+  if (max < 0) max = 0;
+  return Math.floor(Math.min(Math.random() * 16, max))
+    .toString(16)
+    .padStart(2, "0");
 }
