@@ -1,5 +1,9 @@
 # Patch Notes
 
+## Version 2.3.3
+
+- Fix DsN integration issue.
+
 ## Version 2.3.2
 
 - Limit max allowed green value for DsN die.

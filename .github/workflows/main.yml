@@ -24,7 +24,7 @@ jobs:
           files: "module.json"
         env:
           download: https://github.com/${{github.repository}}/releases/download/${{steps.get-version.outputs.version}}/streamUtils.zip
-      - run: zip -r ./streamUtils.zip module.json streamUtils.js streamUtilsInit.js css/ templates/ lang/ modules/ # Add folders/files here
+      - run: zip -r ./streamUtils.zip module.json streamUtils.js streamUtilsInit.js css/ templates/ lang/ modules/ CHANGELOG.md # Add folders/files here
       - name: Create Release # Create an additional release for this version
         id: create_versioned_release
         uses: ncipollo/release-action@v1

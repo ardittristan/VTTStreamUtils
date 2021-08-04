@@ -4,23 +4,55 @@ export default async function diceSoNice() {
   /** @type {String} */
   let dsnSource = document.querySelector('script[src*="modules/dice-so-nice"][src*="main.js"][type="module"]')?.src;
   if (dsnSource) {
-    let { Dice3D } = await import(dsnSource);
-    main(Dice3D);
+    if (game.modules.get("dice-so-nice").data.version.match(/^[0-3]/) !== null) {
+      let { Dice3D } = await import(dsnSource);
+      main(Dice3D);
+    } else {
+      let { Dice3D } = await import(dsnSource.replace("main.js", "Dice3D.js"));
+      let { Utils } = await import(dsnSource.replace("main.js", "Utils.js"));
+      main(Dice3D, Utils);
+    }
   }
 }
 
-function main(Dice3D) {
+function main(Dice3D, Utils = undefined) {
   game.user.color = getRandomColor();
   if (game.data.version.includes("0.7.")) {
     canvas = new Canvas();
   } else canvas.initialize();
+
+  window.ui.sidebar = {};
+  window.ui.sidebar.popouts = {};
+
+  if (game.modules.get("dice-so-nice").data.version.match(/^[0-3]/) === null) {
+    Dice3D.DEFAULT_APPEARANCE = function (user = game.user) {
+      let color = getRandomColor();
+      return {
+        global: {
+          labelColor: Utils.contrastOf(color),
+          diceColor: color,
+          outlineColor: color,
+          edgeColor: color,
+          texture: "none",
+          material: "auto",
+          font: "auto",
+          colorset: "custom",
+          system: "standard",
+        },
+      };
+    };
+  }
 
   Dice3D.ALL_CUSTOMIZATION = function (user = game.user) {
     user.color = getRandomColor();
     user.getFlag = function () {
       return undefined;
     };
-    return Dice3D.APPEARANCE(user);
+    if (game.modules.get("dice-so-nice").data.version.match(/^[0-3]/) !== null) {
+      return Dice3D.APPEARANCE(user);
+    } else {
+      return { appearance: Dice3D.APPEARANCE(user) };
+    }
   };
 
   class StreamDice3D extends Dice3D {
