@@ -41,6 +41,14 @@ function main(Dice3D, Utils = undefined) {
         },
       };
     };
+
+    Dice3D.BASECONFIG = Dice3D.CONFIG;
+    Dice3D.CONFIG = function (user = game.user) {
+      user.getFlag = function () {
+        return null;
+      };
+      return Dice3D.BASECONFIG(user);
+    };
   }
 
   Dice3D.ALL_CUSTOMIZATION = function (user = game.user) {
