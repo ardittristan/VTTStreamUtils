@@ -9,59 +9,25 @@ export default async function diceSoNice() {
       main(Dice3D);
     } else {
       let { Dice3D } = await import(dsnSource.replace("main.js", "Dice3D.js"));
-      let { Utils } = await import(dsnSource.replace("main.js", "Utils.js"));
-      main(Dice3D, Utils);
+      main(Dice3D);
     }
   }
 }
 
-function main(Dice3D, Utils = undefined) {
-  game.user.color = getRandomColor();
+function main(Dice3D) {
+  let color = getRandomColor();
+  game.user.color = color;
+  game.user.data.color = color;
+  game.user.getFlag = function () {
+    return null;
+  };
+
   if (game.data.version.includes("0.7.")) {
     canvas = new Canvas();
   } else canvas.initialize();
 
   window.ui.sidebar = {};
   window.ui.sidebar.popouts = {};
-
-  if (game.modules.get("dice-so-nice").data.version.match(/^[0-3]/) === null) {
-    Dice3D.DEFAULT_APPEARANCE = function (user = game.user) {
-      let color = getRandomColor();
-      return {
-        global: {
-          labelColor: Utils.contrastOf(color),
-          diceColor: color,
-          outlineColor: color,
-          edgeColor: color,
-          texture: "none",
-          material: "auto",
-          font: "auto",
-          colorset: "custom",
-          system: "standard",
-        },
-      };
-    };
-
-    Dice3D.BASECONFIG = Dice3D.CONFIG;
-    Dice3D.CONFIG = function (user = game.user) {
-      user.getFlag = function () {
-        return null;
-      };
-      return Dice3D.BASECONFIG(user);
-    };
-  }
-
-  Dice3D.ALL_CUSTOMIZATION = function (user = game.user) {
-    user.color = getRandomColor();
-    user.getFlag = function () {
-      return undefined;
-    };
-    if (game.modules.get("dice-so-nice").data.version.match(/^[0-3]/) !== null) {
-      return Dice3D.APPEARANCE(user);
-    } else {
-      return { appearance: Dice3D.APPEARANCE(user) };
-    }
-  };
 
   class StreamDice3D extends Dice3D {
     _resizeCanvas() {
@@ -73,60 +39,33 @@ function main(Dice3D, Utils = undefined) {
       super._buildCanvas();
       this.canvas.prependTo(".streamUtils");
     }
+
+    showForRoll(...args) {
+      args.forEach((arg) => {
+        console.log(arg?.constructor?.name);
+        if (arg?.constructor?.name === "User") {
+          let color = getRandomColor();
+          arg.color = color;
+          arg.data.color = color;
+          arg.getFlag = function () {
+            return null;
+          };
+        } else if (arg?.constructor?.name === "ChatSpeakerData") {
+          arg = null;
+        }
+      });
+      return super.showForRoll(...args);
+    }
   }
 
   game.dice3d = new StreamDice3D();
 
-  Hooks.on("createChatMessage", (chatMessage) => {
-    //precheck for better perf
-    let hasInlineRoll = game.settings.get("dice-so-nice", "animateInlineRoll") && chatMessage.data.content.indexOf("inline-roll") !== -1;
-    if (
-      (!chatMessage.isRoll && !hasInlineRoll) ||
-      !chatMessage.isContentVisible ||
-      !game.dice3d ||
-      game.dice3d.messageHookDisabled ||
-      (chatMessage.getFlag("core", "RollTable") && !game.settings.get("dice-so-nice", "animateRollTable"))
-    ) {
-      return;
-    }
-    let roll = chatMessage.roll;
-    if (hasInlineRoll) {
-      let JqInlineRolls = $($.parseHTML(chatMessage.data.content)).filter(".inline-roll.inline-result");
-      if (JqInlineRolls.length == 0 && !chatMessage.isRoll)
-        //it was a false positive
-        return;
-      let inlineRollList = [];
-      JqInlineRolls.each((index, el) => {
-        inlineRollList.push(Roll.fromJSON(unescape(el.dataset.roll)));
-      });
-      if (inlineRollList.length) {
-        if (chatMessage.isRoll) inlineRollList.push(chatMessage.roll);
-        let mergingPool = new DicePool({ rolls: inlineRollList }).evaluate();
-        roll = Roll.create(mergingPool.formula).evaluate();
-        roll.terms = [mergingPool];
-        roll.results = [mergingPool.total];
-        roll._total = mergingPool.total;
-        roll._rolled = true;
-      } else if (!chatMessage.isRoll) return;
-    }
+  Hooks._hooks.createChatMessage.unshift((chatMessage) => {
+    if (chatMessage.isRoll) game.view = "game";
+  });
 
-    let actor = game.actors.get(chatMessage.data.speaker.actor);
-    const isNpc = actor ? actor.data.type === "npc" : false;
-    if (isNpc && game.settings.get("dice-so-nice", "hideNpcRolls")) {
-      return;
-    }
-
-    //Remove the chatmessage sound if it is the core dice sound.
-    if (Dice3D.CONFIG.sounds && chatMessage.data.sound == "sounds/dice.wav") {
-      mergeObject(chatMessage.data, { "-=sound": null });
-    }
-    chatMessage._dice3danimating = true;
-    game.dice3d.showForRoll(roll, { ...chatMessage.user, ...{ color: getRandomColor() } }, false, null, false, chatMessage.id).then((displayed) => {
-      delete chatMessage._dice3danimating;
-      $(`#chat-log .message[data-message-id="${chatMessage.id}"]`).show();
-      Hooks.callAll("diceSoNiceRollComplete", chatMessage.id);
-      ui.chat.scrollBottom();
-    });
+  Hooks._hooks.createChatMessage.push((chatMessage) => {
+    if (chatMessage.isRoll) game.view = "stream";
   });
 }
 

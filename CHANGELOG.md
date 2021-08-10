@@ -1,5 +1,9 @@
 # Patch Notes
 
+## Version 2.3.5
+
+- Greatly improved DsN integration update stability.
+
 ## Version 2.3.4
 
 - More DsN fixes.
