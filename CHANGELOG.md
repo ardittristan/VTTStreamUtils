@@ -1,5 +1,11 @@
 # Patch Notes
 
+## Version 2.3.6
+
+- Remove usage of unneeded code with new DsN Version.
+- Improve logging on /stream view.
+- Improve audio disabling mechanism.
+
 ## Version 2.3.5
 
 - Greatly improved DsN integration update stability.

@@ -1,5 +1,9 @@
+import { libraryLog } from "../streamUtils.js";
+
 export default async function diceSoNice() {
   if (!game.settings.get("0streamutils", "enableDSN")) return;
+
+  libraryLog("Initializing DsN module");
 
   /** @type {String} */
   let dsnSource = document.querySelector('script[src*="modules/dice-so-nice"][src*="main.js"][type="module"]')?.src;
@@ -11,6 +15,9 @@ export default async function diceSoNice() {
       let { Dice3D } = await import(dsnSource.replace("main.js", "Dice3D.js"));
       main(Dice3D);
     }
+    libraryLog("Finished initializing DsN module");
+  } else {
+    console.error("DsN Not Found");
   }
 }
 
@@ -60,13 +67,15 @@ function main(Dice3D) {
 
   game.dice3d = new StreamDice3D();
 
-  Hooks._hooks.createChatMessage.unshift((chatMessage) => {
-    if (chatMessage.isRoll) game.view = "game";
-  });
+  if (Number(game.modules.get("dice-so-nice").data.version.replace(".", "")) < 412) {
+    Hooks._hooks.createChatMessage.unshift((chatMessage) => {
+      if (chatMessage.isRoll) game.view = "game";
+    });
 
-  Hooks._hooks.createChatMessage.push((chatMessage) => {
-    if (chatMessage.isRoll) game.view = "stream";
-  });
+    Hooks._hooks.createChatMessage.push((chatMessage) => {
+      if (chatMessage.isRoll) game.view = "stream";
+    });
+  }
 }
 
 function getRandomColor() {

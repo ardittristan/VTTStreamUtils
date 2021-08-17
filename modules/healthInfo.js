@@ -1,7 +1,10 @@
-import { getArraySettingsCompat } from "../streamUtils.js";
+import { getArraySettingsCompat, libraryLog } from "../streamUtils.js";
 
 export default async function healthInfo() {
   if (!game.settings.get("0streamutils", "enableHpView")) return;
+
+  libraryLog("Initializing HealthInfo module");
+
   await getTemplate("modules/0streamutils/templates/hpOverlay.html");
   $(".streamUtils").append($('<section id="hp"><table id="hpApp"></table></section>'));
   game.actors.forEach(async (actor) => {
@@ -36,6 +39,8 @@ export default async function healthInfo() {
       }
     });
   }, 5000);
+
+  libraryLog("Finished initializing HealthInfo module");
 }
 
 function getHPString(health, maxHealth) {

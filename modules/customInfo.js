@@ -1,7 +1,10 @@
-import { hasIcon, getArraySettingsCompat } from "../streamUtils.js";
+import { hasIcon, getArraySettingsCompat, libraryLog } from "../streamUtils.js";
 
 export default async function customInfo() {
   if (!game.settings.get("0streamutils", "enableCustom")) return;
+
+  libraryLog("Initializing custom info module");
+
   // preload template
   await getTemplate("modules/0streamutils/templates/customOverlay.html");
   /** @type {import('./docs/settings').SettingsObject[]} */
@@ -75,4 +78,6 @@ export default async function customInfo() {
       }, 5000);
     }
   });
+
+  libraryLog("Finished initializing custom info module");
 }

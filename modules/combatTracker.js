@@ -1,11 +1,15 @@
-import { sleep } from "../streamUtils.js";
+import { libraryLog, sleep } from "../streamUtils.js";
 
 export default async function combatTracker() {
   ui.combat = new CombatOverlay();
 
   if (!game.settings.get("0streamutils", "enableTracker")) return;
 
+  libraryLog("Initializing CombatTracker module");
+
   ui.combat.render(true);
+
+  libraryLog("Finished initializing CombatTracker module");
 }
 
 class CombatOverlay extends CombatTracker {

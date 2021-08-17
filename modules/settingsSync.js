@@ -1,11 +1,17 @@
-export default function settingsSync() {
+import { libraryLog } from "../streamUtils.js";
+
+export default async function settingsSync() {
   game.socket.on("module.0streamutils", (data) => {
     // set settings
     if (data.sendSettings && data.sendTo.includes(game.user.id)) {
+      libraryLog("Beginning settings synchronization");
+
       Hooks.callAll("streamutilsReceivedSettings", data.settings);
       data.settings.forEach((setting) => {
         localStorage.setItem(setting.key, setting.data);
       });
+
+      libraryLog("Finished settings synchronization");
     }
   });
 }

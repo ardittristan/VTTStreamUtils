@@ -8,20 +8,27 @@ import healthInfo from "./modules/healthInfo.js";
 import diceSoNice from "./modules/diceSoNice.js";
 
 if (window.location.pathname.includes("/stream")) {
+  libraryLog("Initializing StreamUtils");
+
   // check for chat log to appear and then run main code
   observe("#chat-log", main);
+  disableAudio();
 }
 
 function main() {
   $("body").append($('<div class="streamUtils"></div>'));
-  registerHelpers();
-  settingsSync();
-  healthInfo();
-  applyCss();
-  customInfo();
-  combatTracker();
-  disableAudio();
-  diceSoNice();
+  Promise.all([
+    registerHelpers(),
+    settingsSync(),
+    healthInfo(),
+    applyCss(),
+    customInfo(),
+    combatTracker(),
+    diceSoNice(),
+    //
+  ]).then(() => {
+    libraryLog("StreamUtils initialized");
+  });
 }
 
 /*******************************************************/
@@ -446,6 +453,17 @@ function hasIconColor(dataObject) {
   }
 }
 
+export function libraryLog(...args) {
+  let outArgs = [];
+  args.forEach((arg) => {
+    const isString = typeof arg === "string";
+    if (isString) arg = "%c" + arg + "%c";
+    outArgs.push(arg);
+    if (isString) outArgs.push("color: green;", "color: initial;");
+  });
+  console.log(...outArgs);
+}
+
 /**
  * @param  {string} module="0streamutils"
  * @param  {string} key
@@ -467,6 +485,8 @@ export function getArraySettingsCompat(module = "0streamutils", key) {
  * @param {Function} func function to run once element is observed
  */
 async function observe(selector, func) {
+  libraryLog("Starting MutationObserver");
+
   const observer = new MutationObserver(() => {
     if ($(selector).length) {
       func();
@@ -478,5 +498,7 @@ async function observe(selector, func) {
     childList: true,
     subtree: true,
   });
+
+  libraryLog("MutationObserver started");
 }
 //#endregion
