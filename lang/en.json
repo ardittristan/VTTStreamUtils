@@ -51,6 +51,9 @@
         "label": "Open sender",
         "hint": "Allows you to send streamutil client settings to specified users."
       },
+      "greenScreenColor": {
+        "name": "Greenscreen color"
+      },
       "Send": "Send"
     },
     "windows": {

@@ -176,6 +176,15 @@ Hooks.once("init", () => {
   if (game.settings.get("0streamutils", "jsonEditor").length === 0) game.settings.set("0streamutils", "jsonEditor", "[\n    \n]");
 });
 
+Hooks.once("colorSettingsInitialized", (ColorSetting) => {
+  new ColorSetting("0streamutils", "greenScreenColor", {
+    name: "streamUtils.settings.greenScreenColor.name",
+    restricted: false,
+    defaultColor: "#00ff00",
+    scope: "client",
+  });
+});
+
 Hooks.once("ready", () => {
   // emit scene info for when scene changes
   game.socket.on("module.0streamutils", (data) => {

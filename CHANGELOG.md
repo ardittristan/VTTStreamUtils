@@ -1,5 +1,11 @@
 # Patch Notes
 
+## Version 2.4.0
+
+- Add option for changing greenscreen color.
+
+- **Now requires the ColorSettings library 2.7.0+!**
+
 ## Version 2.3.6
 
 - Remove usage of unneeded code with new DsN Version.
