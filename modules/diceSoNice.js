@@ -49,14 +49,11 @@ function main(Dice3D) {
 
     showForRoll(...args) {
       args.forEach((arg) => {
-        console.log(arg?.constructor?.name);
         if (arg?.constructor?.name === "User") {
           let color = getRandomColor();
-          arg.color = color;
-          arg.data.color = color;
-          arg.getFlag = function () {
-            return null;
-          };
+          arg.color = arg.color || color;
+          arg.data.color = arg.data?.color || color;
+          arg.getFlag = (id, flag) => arg.data?.flags?.[id]?.[flag] || null;
         } else if (arg?.constructor?.name === "ChatSpeakerData") {
           arg = null;
         }
