@@ -1,0 +1,23 @@
+body.stream #lastRollApp {
+  width: max-content;
+  border: none;
+  background: none;
+  font-family: "Berkshire Swash", cursive;
+}
+
+body.stream #lastRollApp .lastRoll {
+  margin-right: 0.75em;
+  font-family: "Lemonada", cursive;
+}
+
+body.stream #lastRollApp .lastRoll .fas {
+  font-size: 105%;
+}
+
+body.stream #lastRollApp tr {
+  background-color: unset;
+}
+
+body.stream #lastRollApp tr td:last-of-type {
+  padding-bottom: 0.45em;
+}

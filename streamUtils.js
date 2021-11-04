@@ -6,6 +6,7 @@ import customInfo from "./modules/customInfo.js";
 import combatTracker from "./modules/combatTracker.js";
 import healthInfo from "./modules/healthInfo.js";
 import diceSoNice from "./modules/diceSoNice.js";
+import lastRoll from "./modules/lastRoll.js";
 
 if (window.location.pathname.includes("/stream")) {
   libraryLog("Initializing StreamUtils");
@@ -25,6 +26,7 @@ function main() {
     customInfo(),
     combatTracker(),
     diceSoNice(),
+    lastRoll(),
     //
   ]).then(() => {
     libraryLog("StreamUtils initialized");
@@ -71,6 +73,31 @@ Hooks.once("init", () => {
     restricted: true,
   });
 
+  // user list settings
+  game.settings.register("0streamutils", "checkedUserList", {
+    scope: "client",
+    type: Array,
+    default: [],
+  });
+  game.settings.registerMenu("0streamutils", "userSelector", {
+    name: "streamUtils.settings.userSelector.name",
+    label: "streamUtils.settings.userSelector.label",
+    type: UserSelector,
+    restricted: false,
+  });
+  game.settings.register("0streamutils", "globalCheckedUserList", {
+    scope: "world",
+    type: Array,
+    default: [],
+  });
+  game.settings.registerMenu("0streamutils", "globalUserSelector", {
+    name: "streamUtils.settings.globalUserSelector.name",
+    label: "streamUtils.settings.globalUserSelector.label",
+    hint: "streamUtils.settings.globalUserSelector.hint",
+    type: GlobalUserSelector,
+    restricted: true,
+  });
+
   // module disabler settings
   game.settings.register("0streamutils", "disabledModules", {
     name: "streamUtils.settings.disabledModules.name",
@@ -113,6 +140,15 @@ Hooks.once("init", () => {
   // encounter module settings
   game.settings.register("0streamutils", "enableTracker", {
     name: "streamUtils.settings.enableTracker.name",
+    scope: "client",
+    type: Boolean,
+    default: true,
+    config: true,
+  });
+
+  // last roll module settings
+  game.settings.register("0streamutils", "enableLastRoll", {
+    name: "streamUtils.settings.enableLastRoll.name",
     scope: "client",
     type: Boolean,
     default: true,
@@ -282,11 +318,57 @@ class CharacterSelector extends FormApplication {
 // same as above but different settings
 class GlobalCharacterSelector extends CharacterSelector {
   getList() {
-    return game.settings.get("0streamutils", "globalCheckedList");
+    return getArraySettingsCompat("0streamutils", "globalCheckedList");
   }
 
   setList(checkedList) {
     game.settings.set("0streamutils", "globalCheckedList", checkedList);
+  }
+}
+
+class UserSelector extends CharacterSelector {
+  static get defaultOptions() {
+    return mergeObject(super.defaultOptions, {
+      title: game.i18n.localize("streamUtils.windows.UserSelector.title"),
+    });
+  }
+
+  getList() {
+    return getArraySettingsCompat("0streamutils", "checkedUserList");
+  }
+
+  setList(checkedList) {
+    game.settings.set("0streamutils", "checkedUserList", checkedList);
+  }
+
+  setupActorList() {
+    /** @type {[{name: String, id: String, checked: Boolean}]} */
+    let actors = [];
+    /** @type {String[]} */
+    const checkedList = this.getList();
+
+    game.users.forEach(
+      /** @param  {User} actor */
+      (actor) => {
+        actors.push({
+          name: actor.name,
+          id: actor.id,
+          checked: checkedList.includes(actor.id),
+        });
+      }
+    );
+
+    return actors;
+  }
+}
+
+class GlobalUserSelector extends UserSelector {
+  getList() {
+    return getArraySettingsCompat("0streamutils", "globalCheckedUserList");
+  }
+
+  setList(checkedList) {
+    game.settings.set("0streamutils", "globalCheckedUserList", checkedList);
   }
 }
 
@@ -309,7 +391,7 @@ class CustomEditor extends FormApplication {
   static get defaultOptions() {
     return mergeObject(super.defaultOptions, {
       id: "custom-editor",
-      title: game.i18n.localize("streamUtils.windows.customEditor.title"),
+      title: game.i18n.localize("streamUtils.windows.CustomEditor.title"),
       template: "modules/0streamutils/templates/customEditor.html",
       classes: ["sheet"],
       closeOnSubmit: true,

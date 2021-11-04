@@ -25,6 +25,12 @@ To install, import this [Manifest](https://raw.githubusercontent.com/ardittrista
 
 ![image](docs/image/README/1603213345851.png)
 
+### Last Roll Overlay
+
+* This one doesn't require any setup.
+
+![image](docs/image/README/1636067415748.png)
+
 ### Custom Overlay
 
 It is possible to create custom overlays, while this does require some knowledge of JSON, more info about this in these [examples](https://github.com/ardittristan/VTTStreamUtils/blob/master/docs/example.md).

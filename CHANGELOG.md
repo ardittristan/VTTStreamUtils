@@ -1,5 +1,10 @@
 # Patch Notes
 
+## Version 2.5.0
+
+- Use player DsN color when available
+- Add module for showing users' last rolls
+
 ## Version 2.4.0
 
 - Add option for changing greenscreen color.

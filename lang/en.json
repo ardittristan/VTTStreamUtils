@@ -10,12 +10,24 @@
         "label": "Open Actor List - Global",
         "hint": "Global fallback actor list if client list is empty"
       },
+      "userSelector": {
+        "name": "Shown Users",
+        "label": "Open User List"
+      },
+      "globalUserSelector": {
+        "name": "Shown Users - Global",
+        "label": "Open User List - Global",
+        "hint": "Global fallback user list if client list is empty"
+      },
       "disabledModules": {
         "name": "Disabled Modules",
         "hint": "Comma seperated list of .js file names or module directory names you don't want to load the scripts from. Sometimes you might have to refresh the stream page for the new settings to appear."
       },
       "enableHpView": {
         "name": "Enable HP View"
+      },
+      "enableLastRoll": {
+        "name": "Enable Last Roll View"
       },
       "hpPath": {
         "name": "HP Variable Path",
@@ -59,6 +71,12 @@
     "windows": {
       "CharacterSelector": {
         "title": "Choose actors to show"
+      },
+      "UserSelector": {
+        "title": "Choose users to show"
+      },
+      "SettingsSender": {
+        "title": "Choose users to send to"
       },
       "CustomEditor": {
         "title": "Custom Overlay Editor",

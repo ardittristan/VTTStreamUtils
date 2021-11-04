@@ -37,7 +37,7 @@ export class SendSettings extends FormApplication {
   static get defaultOptions() {
     return mergeObject(super.defaultOptions, {
       id: "streamutils-sender",
-      title: game.i18n.localize("streamUtils.windows.CharacterSelector.title"),
+      title: game.i18n.localize("streamUtils.windows.SettingsSender.title"),
       template: "modules/0streamutils/templates/sendSettings.html",
       classes: ["sheet"],
       closeOnSubmit: true,
