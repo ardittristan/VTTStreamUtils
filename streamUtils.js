@@ -560,7 +560,7 @@ export function libraryLog(...args) {
  * @param  {string} key
  */
 export function getArraySettingsCompat(module = "0streamutils", key) {
-  return game.data.version.includes("0.7.") ? game.settings.get(module, key)?.[0] || [] : game.settings.get(module, key);
+  return (game.version ?? game.data.version).includes("0.7.") ? game.settings.get(module, key)?.[0] || [] : game.settings.get(module, key);
 }
 //#endregion
 

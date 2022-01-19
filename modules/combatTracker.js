@@ -43,7 +43,7 @@ class CombatOverlay extends CombatTracker {
 
     // replace data that doesn't exist on /stream with the required data
     const view = this.currentScene || null;
-    const combats = view ? game.combats[game.data.version.includes("0.7.") ? "entities" : "contents"].filter((c) => c.data.scene === view._id) : [];
+    const combats = view ? game.combats[(game.version ?? game.data.version).includes("0.7.") ? "entities" : "contents"].filter((c) => c.data.scene === view._id) : [];
 
     data.combats = combats;
     data.combatCount = combats.length;

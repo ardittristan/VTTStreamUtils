@@ -25,12 +25,27 @@ function main(Dice3D) {
   let color = getRandomColor();
   game.user.color = color;
   game.user.data.color = color;
-  game.user.getFlag = function () {
+  game.user.getFlag = function (scope, key) {
+    if (scope === "dice-so-nice" && key === "settings")
+      return {
+        rollingArea: {
+          left: 0,
+          top: 0,
+          width: game.settings.get("0streamutils", "DSNWidth"),
+          height: game.settings.get("0streamutils", "DSNHeight"),
+        },
+      };
     return null;
   };
 
-  if (game.data.version.includes("0.7.")) {
+  if ((game.version ?? game.data.version).includes("0.7.")) {
     canvas = new Canvas();
+  } else if ((game.version ?? game.data.version).split(".")[0] >= 9) {
+    const board = document.createElement("div");
+    board.id = "board";
+    board.style.display = "none";
+    document.body.appendChild(board);
+    canvas.initialize();
   } else canvas.initialize();
 
   window.ui.sidebar = {};

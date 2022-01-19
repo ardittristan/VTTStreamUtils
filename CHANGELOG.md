@@ -1,5 +1,11 @@
 # Patch Notes
 
+## Version 2.5.1
+
+- Updated for new DsN version
+- Initialize v9 canvas correctly
+- Remove excessive warnings from using v9 deprecated game properties
+
 ## Version 2.5.0
 
 - Use player DsN color when available

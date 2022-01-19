@@ -47,7 +47,7 @@ export class SendSettings extends FormApplication {
   getData(options) {
     const data = super.getData(options);
 
-    data.players = game.users[game.data.version.includes("0.7.") ? "entities" : "contents"]
+    data.players = game.users[(game.version ?? game.data.version).includes("0.7.") ? "entities" : "contents"]
       .filter((user) => user.active)
       .map((user) => {
         return { name: user.name, id: user.id };
