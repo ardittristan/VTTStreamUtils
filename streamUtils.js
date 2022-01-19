@@ -155,6 +155,15 @@ Hooks.once("init", () => {
     config: true,
   });
 
+  game.settings.register("0streamutils", "showFullSumLastRoll", {
+    name: "streamUtils.settings.showFullSumLastRoll.name",
+    hint: "streamUtils.settings.showFullSumLastRoll.hint",
+    scope: "client",
+    type: Boolean,
+    default: true,
+    config: true,
+  });
+
   // DSN module settings
   game.settings.register("0streamutils", "enableDSN", {
     name: "streamUtils.settings.enableDSN.name",

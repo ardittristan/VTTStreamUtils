@@ -62,6 +62,8 @@ function main(Dice3D) {
       this.canvas.prependTo(".streamUtils");
     }
 
+    _welcomeMessage() {}
+
     showForRoll(...args) {
       args.forEach((arg) => {
         if (arg?.constructor?.name === "User") {

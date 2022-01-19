@@ -29,6 +29,10 @@
       "enableLastRoll": {
         "name": "Enable Last Roll View"
       },
+      "showFullSumLastRoll": {
+        "name": "Show Last Roll Sum",
+        "hint": "Shows the total of the last roll instead of the equation"
+      },
       "hpPath": {
         "name": "HP Variable Path",
         "hint": "The path to the hp variable without including Actor (if it's 'Actor.data.hp.value' for example it'll be 'data.hp.value')"

@@ -1,5 +1,10 @@
 # Patch Notes
 
+## Version 2.5.2
+
+- Disable DsN welcome message in stream view
+- Add option to toggle between roll sum and roll text in roll result
+
 ## Version 2.5.1
 
 - Updated for new DsN version

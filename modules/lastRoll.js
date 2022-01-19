@@ -47,7 +47,7 @@ if (window.location.pathname.includes("/stream"))
      */
     function (chatMessage) {
       if (game.settings.get("0streamutils", "enableLastRoll") && chatMessage.isRoll) {
-        game.users.get(chatMessage.data.user).lastRoll = chatMessage.roll.result;
+        game.users.get(chatMessage.data.user).lastRoll = game.settings.get("0streamutils", "showFullSumLastRoll") ? chatMessage.roll.total : chatMessage.roll.result;
       }
     }
   );
