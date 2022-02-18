@@ -13,15 +13,15 @@ export default async function diceSoNice() {
     if (game.modules.get("dice-so-nice").data.version.match(/^[0-3]/) !== null) {
       let { Dice3D } = await import(dsnSource);
       init();
-      main(Dice3D);
+      main(Dice3D, false);
     } else if (game.modules.get("dice-so-nice").data.version.match(/^4\.[0-3]/) !== null) {
       let { Dice3D } = await import(dsnSource.replace("main.js", "Dice3D.js"));
       init();
-      main(Dice3D);
+      main(Dice3D, false);
     } else {
       init();
       await new Promise((resolve) => {
-        Hooks.once("diceSoNiceReady", (dice3d) => {
+        Hooks.once("diceSoNiceInit", (dice3d) => {
           main(dice3d.constructor);
           resolve();
         });
@@ -64,21 +64,26 @@ function init() {
   window.ui.sidebar.popouts = {};
 }
 
-function main(Dice3D) {
-  class StreamDice3D extends Dice3D {
-    _resizeCanvas() {
+function main(Dice3D, New = true) {
+  if (New) {
+    Dice3D.prototype._buildCanvasOrig = Dice3D.prototype._buildCanvas;
+    Dice3D.prototype.showForRollOrig = Dice3D.prototype.showForRoll;
+
+    Dice3D.prototype._resizeCanvas = function () {
       this.canvas.width(game.settings.get("0streamutils", "DSNWidth") + "px");
       this.canvas.height(game.settings.get("0streamutils", "DSNHeight") + "px");
-    }
+    };
 
-    _buildCanvas() {
-      super._buildCanvas();
+    Dice3D.prototype._buildCanvas = function () {
+      this._buildCanvasOrig();
       this.canvas.prependTo(".streamUtils");
-    }
+      console.log(this.canvas);
+    };
 
-    _welcomeMessage() {}
+    Dice3D.prototype._welcomeMessage = function () {};
 
-    showForRoll(...args) {
+    Dice3D.prototype.showForRoll = function (...args) {
+      console.log("test");
       args.forEach((arg) => {
         if (arg?.constructor?.name === "User") {
           let color = getRandomColor();
@@ -89,11 +94,40 @@ function main(Dice3D) {
           arg = null;
         }
       });
-      return super.showForRoll(...args);
-    }
-  }
+      return this.showForRollOrig(...args);
+    };
+  } else {
+    class StreamDice3D extends Dice3D {
+      _resizeCanvas() {
+        this.canvas.width(game.settings.get("0streamutils", "DSNWidth") + "px");
+        this.canvas.height(game.settings.get("0streamutils", "DSNHeight") + "px");
+      }
 
-  game.dice3d = new StreamDice3D();
+      _buildCanvas() {
+        document.getElementById("dice-box-canvas")?.remove();
+        super._buildCanvas();
+        this.canvas.prependTo(".streamUtils");
+      }
+
+      _welcomeMessage() {}
+
+      showForRoll(...args) {
+        args.forEach((arg) => {
+          if (arg?.constructor?.name === "User") {
+            let color = getRandomColor();
+            arg.color = arg.color || color;
+            arg.data.color = arg.data?.color || color;
+            arg.getFlag = (id, flag) => arg.data?.flags?.[id]?.[flag] || null;
+          } else if (arg?.constructor?.name === "ChatSpeakerData") {
+            arg = null;
+          }
+        });
+        return super.showForRoll(...args);
+      }
+    }
+
+    game.dice3d = new StreamDice3D();
+  }
 
   if (Number(game.modules.get("dice-so-nice").data.version.replace(".", "")) < 412) {
     Hooks._hooks.createChatMessage.unshift((chatMessage) => {

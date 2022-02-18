@@ -1,0 +1,16 @@
+#journalShow {
+  border: solid black thin;
+}
+
+#journalShow .compact-journal-entry {
+  width: inherit;
+  max-width: inherit;
+  min-width: inherit;
+  height: inherit;
+  max-height: inherit;
+  min-height: inherit;
+}
+
+#journalShow .compact-journal-entry .editor::-webkit-scrollbar-corner {
+  background: rgba(0, 0, 0, 0);
+}

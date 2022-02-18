@@ -70,7 +70,19 @@
       "greenScreenColor": {
         "name": "Greenscreen color"
       },
-      "Send": "Send"
+      "Send": "Send",
+      "enableJournalShow": {
+        "name": "Enable journal widget"
+      },
+      "journalShowWidth": {
+        "name": "Journal widget width"
+      },
+      "journalShowHeight": {
+        "name": "Journal widget height"
+      },
+      "journalBackground": {
+        "name": "Journal widget background"
+      }
     },
     "windows": {
       "CharacterSelector": {

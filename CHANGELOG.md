@@ -1,5 +1,10 @@
 # Patch Notes
 
+## Version 2.6.0
+
+- Added "Show Players" widget.
+- DsN fixes.
+
 ## Version 2.5.3
 
 - DsN 4.4 compatibility.

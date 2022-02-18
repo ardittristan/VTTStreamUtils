@@ -7,6 +7,7 @@ import combatTracker from "./modules/combatTracker.js";
 import healthInfo from "./modules/healthInfo.js";
 import diceSoNice from "./modules/diceSoNice.js";
 import lastRoll from "./modules/lastRoll.js";
+import journalShow from "./modules/journalShow.js";
 
 if (window.location.pathname.includes("/stream")) {
   libraryLog("Initializing StreamUtils");
@@ -27,6 +28,7 @@ function main() {
     combatTracker(),
     diceSoNice(),
     lastRoll(),
+    journalShow(),
     //
   ]).then(() => {
     libraryLog("StreamUtils initialized");
@@ -144,6 +146,43 @@ Hooks.once("init", () => {
     type: Boolean,
     default: true,
     config: true,
+  });
+
+  // journal show module settings
+  game.settings.register("0streamutils", "enableJournalShow", {
+    name: "streamUtils.settings.enableJournalShow.name",
+    scope: "client",
+    type: Boolean,
+    default: true,
+    config: true,
+  });
+
+  game.settings.register("0streamutils", "journalShowWidth", {
+    name: "streamUtils.settings.journalShowWidth.name",
+    scope: "client",
+    type: Number,
+    default: 500,
+    config: true,
+  });
+
+  game.settings.register("0streamutils", "journalShowHeight", {
+    name: "streamUtils.settings.journalShowHeight.name",
+    scope: "client",
+    type: Number,
+    default: 500,
+    config: true,
+  });
+
+  game.settings.register("0streamutils", "journalBackground", {
+    name: "streamUtils.settings.journalBackground.name",
+    scope: "client",
+    type: String,
+    default: "",
+    config: true,
+  });
+
+  Hooks.on("renderSettingsConfig", (config, html) => {
+    html.find(`.tab[data-tab="modules"] .form-group .form-fields input[name="0streamutils.journalBackground"]`).attr("placeholder", "../ui/parchment.jpg");
   });
 
   // last roll module settings

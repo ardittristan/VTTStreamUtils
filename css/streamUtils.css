@@ -10,9 +10,9 @@ body.stream {
 }
 
 body.stream > .tab[data-tab] {
-  position: relative;
+  position: relative !important;
   margin: 20px 50px 20px 20px;
-  top: 0;
+  top: 0 !important;
 }
 
 body.stream > section#chat {
