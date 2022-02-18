@@ -1,5 +1,9 @@
 # Patch Notes
 
+## Version 2.5.3
+
+- DsN 4.4 compatibility.
+
 ## Version 2.5.2
 
 - Disable DsN welcome message in stream view

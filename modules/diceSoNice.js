@@ -1,5 +1,7 @@
 import { libraryLog } from "../streamUtils.js";
 
+let color = getRandomColor();
+
 export default async function diceSoNice() {
   if (!game.settings.get("0streamutils", "enableDSN")) return;
 
@@ -10,10 +12,21 @@ export default async function diceSoNice() {
   if (dsnSource) {
     if (game.modules.get("dice-so-nice").data.version.match(/^[0-3]/) !== null) {
       let { Dice3D } = await import(dsnSource);
+      init();
+      main(Dice3D);
+    } else if (game.modules.get("dice-so-nice").data.version.match(/^4\.[0-3]/) !== null) {
+      let { Dice3D } = await import(dsnSource.replace("main.js", "Dice3D.js"));
+      init();
       main(Dice3D);
     } else {
-      let { Dice3D } = await import(dsnSource.replace("main.js", "Dice3D.js"));
-      main(Dice3D);
+      init();
+      await new Promise((resolve) => {
+        Hooks.once("diceSoNiceReady", (dice3d) => {
+          main(dice3d.constructor);
+          resolve();
+        });
+        Hooks._hooks.ready.filter((hook) => hook.toString().includes("new Dice3D"))[0].call();
+      });
     }
     libraryLog("Finished initializing DsN module");
   } else {
@@ -21,8 +34,7 @@ export default async function diceSoNice() {
   }
 }
 
-function main(Dice3D) {
-  let color = getRandomColor();
+function init() {
   game.user.color = color;
   game.user.data.color = color;
   game.user.getFlag = function (scope, key) {
@@ -50,7 +62,9 @@ function main(Dice3D) {
 
   window.ui.sidebar = {};
   window.ui.sidebar.popouts = {};
+}
 
+function main(Dice3D) {
   class StreamDice3D extends Dice3D {
     _resizeCanvas() {
       this.canvas.width(game.settings.get("0streamutils", "DSNWidth") + "px");
