@@ -1,5 +1,9 @@
 # Patch Notes
 
+## Version 2.6.1
+
+- Fix journal images not showing in "Show Players" widget.
+
 ## Version 2.6.0
 
 - Added "Show Players" widget.
