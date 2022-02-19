@@ -68,11 +68,14 @@
         "hint": "Allows you to send streamutil client settings to specified users."
       },
       "greenScreenColor": {
-        "name": "Greenscreen color"
+        "name": "Green-screen color"
       },
       "Send": "Send",
       "enableJournalShow": {
         "name": "Enable journal widget"
+      },
+      "enableJournalShowMonksJournal": {
+        "name": "Enable journal widget Monks Enhanced Journal integration"
       },
       "journalShowWidth": {
         "name": "Journal widget width"

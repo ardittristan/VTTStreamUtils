@@ -83,7 +83,6 @@ function main(Dice3D, New = true) {
     Dice3D.prototype._welcomeMessage = function () {};
 
     Dice3D.prototype.showForRoll = function (...args) {
-      console.log("test");
       args.forEach((arg) => {
         if (arg?.constructor?.name === "User") {
           let color = getRandomColor();
@@ -141,7 +140,7 @@ function main(Dice3D, New = true) {
 }
 
 function getRandomColor() {
-  var color = "#";
+  let color = "#";
   color += getRandomHex();
   color += getRandomHex(80);
   color += getRandomHex();

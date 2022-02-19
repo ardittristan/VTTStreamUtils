@@ -7,7 +7,7 @@ export default async function customInfo() {
 
   // preload template
   await getTemplate("modules/0streamutils/templates/customOverlay.html");
-  /** @type {import('./docs/settings').SettingsObject[]} */
+  /** @type {import('../docs/settings').SettingsObject[]} */
   let settings = JSON.parse(game.settings.get("0streamutils", "jsonEditor"));
   if (settings.length === 0) return;
 

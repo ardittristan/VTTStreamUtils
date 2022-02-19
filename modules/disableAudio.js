@@ -6,11 +6,7 @@ export default function disableAudio() {
   AudioHelper.getAudioContext = function () {
     return null;
   };
-  AudioHelper.play = function () {
-    return;
-  };
-  AudioHelper.prototype._onFirstGesture = function () {
-    return;
-  };
+  AudioHelper.play = function () {};
+  AudioHelper.prototype._onFirstGesture = function () {};
   libraryLog("Finished disabling AudioHelper");
 }

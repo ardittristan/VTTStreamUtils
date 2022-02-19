@@ -58,7 +58,7 @@ class CombatOverlay extends CombatTracker {
     }
   }
 
-  // append to it's container div on the first render
+  // append to its container div on the first render
   async firstRender() {
     while (!this._element) {
       await sleep(50);

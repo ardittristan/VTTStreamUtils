@@ -1,7 +1,7 @@
 import { hasIcon, libraryLog } from "../streamUtils.js";
 
 export default async function registerHelpers() {
-  libraryLog("Registring Handlebars helpers");
+  libraryLog("Registering Handlebars helpers");
 
   Handlebars.registerHelper("getProperty", function (data, property) {
     return getProperty(data, property);
@@ -14,5 +14,5 @@ export default async function registerHelpers() {
     return hasIcon(dataObject);
   });
 
-  libraryLog("Finished registring Handlebars helpers");
+  libraryLog("Finished registering Handlebars helpers");
 }
