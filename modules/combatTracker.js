@@ -12,7 +12,7 @@ export default async function combatTracker() {
   libraryLog("Finished initializing CombatTracker module");
 }
 
-class CombatOverlay extends CombatTracker {
+class CombatOverlay extends CONFIG.ui.combat {
   constructor(options) {
     super(options);
     /** @type {Scene} */

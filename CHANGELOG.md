@@ -1,5 +1,9 @@
 # Patch Notes
 
+## Version 2.6.2
+
+- Initial support for Monks Enhanced Journal, currently only default journals.
+
 ## Version 2.6.1
 
 - Fix journal images not showing in "Show Players" widget.

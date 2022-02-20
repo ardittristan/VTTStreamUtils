@@ -5,6 +5,9 @@ export default async function journalShow() {
 
   libraryLog("Setting up journal show");
 
+  ui.journal = new JournalStreamDirectory();
+  game.permissions = {};
+
   let w = game.settings.get("0streamutils", "journalShowWidth");
   let h = game.settings.get("0streamutils", "journalShowHeight");
 
@@ -56,5 +59,87 @@ export default async function journalShow() {
 
   Journal._activateSocketListeners(game.socket);
 
+  await journalShowMonksJournal();
+
   libraryLog("Finished setting up journal show");
+}
+
+async function journalShowMonksJournal() {
+  if (!game.settings.get("0streamutils", "enableJournalShowMonksJournal") || !game.MonksEnhancedJournal) return;
+
+  /** @type {string} */
+  const monksJournalSource = document.querySelector('script[src*="modules/monks-enhanced-journal"][src*="monks-enhanced-journal.js"][type="module"]')?.src;
+
+  const MonksEnhancedJournal = game.MonksEnhancedJournal;
+  const EnhancedJournal = (await import(monksJournalSource.replace("monks-enhanced-journal.js", "apps/enhanced-journal.js"))).EnhancedJournal;
+  const EnhancedJournalSheet = (await import(monksJournalSource.replace("monks-enhanced-journal.js", "sheets/EnhancedJournalSheet.js"))).EnhancedJournalSheet;
+
+  EnhancedJournal.prototype._render = async function _render(force, options = {}) {
+    let result = await Application.prototype._render.call(this, force, options);
+
+    if (this.element) {
+      this.renderDirectory().then((html) => {
+        MonksEnhancedJournal.updateDirectory(html);
+      });
+
+      await this.renderSubSheet();
+    }
+
+    /** @type {JQuery} */
+    let wrapper = this.element;
+    /** @type {JQuery} */
+    let sheet = this.subsheet.element;
+
+    $("#journalShow").html(sheet);
+    wrapper.remove();
+
+    return result;
+  };
+
+  JournalSheet.prototype._getHeaderButtons = null;
+
+  EnhancedJournalSheet.prototype._getHeaderButtons = null;
+
+  Object.defineProperty(EnhancedJournal.prototype, "_dragDrop", {
+    get() {
+      return [];
+    },
+    set() {},
+  });
+
+  Object.defineProperty(EnhancedJournal.prototype, "popOut", {
+    get() {
+      return false;
+    },
+  });
+
+  Object.defineProperty(EnhancedJournalSheet.prototype, "options", {
+    get() {
+      this._options.dragDrop = [];
+      return this._options;
+    },
+    set(options) {
+      this._options = options;
+    },
+  });
+
+  Object.defineProperty(JournalSheet.prototype, "isEditable", {
+    get() {
+      return false;
+    },
+  });
+
+  Object.defineProperty(EnhancedJournal.prototype, "isEditable", {
+    get() {
+      return false;
+    },
+  });
+
+  MonksEnhancedJournal.ready();
+}
+
+class JournalStreamDirectory extends CONFIG.ui.journal {
+  get popOut() {
+    return true;
+  }
 }

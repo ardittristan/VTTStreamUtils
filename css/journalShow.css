@@ -15,13 +15,22 @@
   background: rgba(0, 0, 0, 0);
 }
 
-#journalShow form.locked.flexcol {
+#journalShow > form.flexcol {
   width: 100%;
   height: 100%;
 }
 
-#journalShow form.locked.flexcol .lightbox-image {
+#journalShow > form.flexcol .lightbox-image {
   background-repeat: no-repeat;
   background-position: center;
   background-size: contain;
+}
+
+#journalShow > form > input[name="name"],
+#journalShow > form > select[name="folder"] {
+  display: none;
+}
+
+body.stream > .monks-enhanced-journal.flexrow {
+  display: none !important;
 }

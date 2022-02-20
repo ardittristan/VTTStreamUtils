@@ -19,6 +19,7 @@ if (window.location.pathname.includes("/stream")) {
 
 function main() {
   $("body").append($('<div class="streamUtils"></div>'));
+  DocumentSheetConfig.initializeSheets();
   Promise.all([
     registerHelpers(),
     settingsSync(),
@@ -151,6 +152,14 @@ Hooks.once("init", () => {
   // journal show module settings
   game.settings.register("0streamutils", "enableJournalShow", {
     name: "streamUtils.settings.enableJournalShow.name",
+    scope: "client",
+    type: Boolean,
+    default: true,
+    config: true,
+  });
+
+  game.settings.register("0streamutils", "enableJournalShowMonksJournal", {
+    name: "streamUtils.settings.enableJournalShowMonksJournal.name",
     scope: "client",
     type: Boolean,
     default: true,
@@ -462,12 +471,6 @@ class CustomEditor extends FormApplication {
     });
   }
 
-  getData(options) {
-    const data = super.getData(options);
-
-    return data;
-  }
-
   /**
    * @description checks if already saved on close
    *
@@ -480,7 +483,7 @@ class CustomEditor extends FormApplication {
         label: game.i18n.localize("Close"),
         class: "close",
         icon: "fas fa-times",
-        onclick: (ev) => {
+        onclick: (_ev) => {
           if (this.unsaved) {
             Dialog.confirm({
               title: game.i18n.localize("streamUtils.windows.CustomEditor.saveDialog.title"),
