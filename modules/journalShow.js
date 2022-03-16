@@ -6,6 +6,7 @@ export default async function journalShow() {
   libraryLog("Setting up journal show");
 
   ui.journal = new JournalStreamDirectory();
+  ui.controls = ui.controls || {};
   game.permissions = {};
 
   let w = game.settings.get("0streamutils", "journalShowWidth");
@@ -57,6 +58,21 @@ export default async function journalShow() {
     },
   });
 
+  Object.defineProperty(ImagePopout.prototype, "popOut", {
+    get() {
+      false;
+    },
+  });
+
+  ImagePopout.prototype._replaceHTML = function (element, html) {
+    $("#journalShow").html(html);
+    this._element = html;
+  };
+
+  ImagePopout.prototype._injectHTML = function (html) {
+    this._replaceHTML(undefined, html);
+  };
+
   Journal._activateSocketListeners(game.socket);
 
   await journalShowMonksJournal();
@@ -73,6 +89,8 @@ async function journalShowMonksJournal() {
   const MonksEnhancedJournal = game.MonksEnhancedJournal;
   const EnhancedJournal = (await import(monksJournalSource.replace("monks-enhanced-journal.js", "apps/enhanced-journal.js"))).EnhancedJournal;
   const EnhancedJournalSheet = (await import(monksJournalSource.replace("monks-enhanced-journal.js", "sheets/EnhancedJournalSheet.js"))).EnhancedJournalSheet;
+  const JournalEntrySheet = (await import(monksJournalSource.replace("monks-enhanced-journal.js", "sheets/JournalEntrySheet.js"))).JournalEntrySheet;
+  const JournalEntrySheetTextOnly = (await import(monksJournalSource.replace("monks-enhanced-journal.js", "sheets/JournalEntrySheet.js"))).JournalEntrySheetTextOnly;
 
   EnhancedJournal.prototype._render = async function _render(force, options = {}) {
     let result = await Application.prototype._render.call(this, force, options);
@@ -89,6 +107,8 @@ async function journalShowMonksJournal() {
     let wrapper = this.element;
     /** @type {JQuery} */
     let sheet = this.subsheet.element;
+
+    sheet.addClass("monks-journal-sheet sheet");
 
     $("#journalShow").html(sheet);
     wrapper.remove();
@@ -134,6 +154,50 @@ async function journalShowMonksJournal() {
       return false;
     },
   });
+
+  Object.defineProperty(EnhancedJournalSheet.prototype, "isEditable", {
+    get() {
+      return false;
+    },
+  });
+
+  MonksEnhancedJournal.registerSheetClasses = function () {
+    let types = MonksEnhancedJournal.getDocumentTypes();
+    let labels = MonksEnhancedJournal.getTypeLabels();
+
+    for (let [k, v] of Object.entries(labels)) {
+      if (CONFIG.JournalEntry.sheetClasses[k] == undefined) CONFIG.JournalEntry.sheetClasses[k] = {};
+      CONFIG.JournalEntry.sheetClasses[k][v] = {
+        cls: types[k] || JournalEntrySheet,
+        default: true,
+        id: v,
+        label: game.i18n.localize(v),
+      };
+    }
+
+    CONFIG.JournalEntry.sheetClasses["base"]["monks-enhanced-journal.JournalEntrySheetTextOnly"] = {
+      cls: JournalEntrySheetTextOnly,
+      default: false,
+      id: "monks-enhanced-journal.JournalEntrySheetTextOnly",
+      label: game.i18n.localize("MonksEnhancedJournal.journalentrytextonly"),
+    };
+
+    game.system.documentTypes.JournalEntry = game.system.documentTypes.JournalEntry.concat(Object.keys(types)).sort();
+    CONFIG.JournalEntry.typeLabels = mergeObject(CONFIG.JournalEntry.typeLabels || {}, labels);
+  };
+
+  MonksEnhancedJournal.showEntry = async function (data) {
+    if (data.users == undefined || data.users.includes(game.user.id)) {
+      Journal._showEntry(data.uuid, null, true);
+    }
+  };
+
+  const origGetData = EnhancedJournalSheet.prototype.getData;
+  EnhancedJournalSheet.prototype.getData = function () {
+    let data = origGetData.call(this);
+    data.owner = false;
+    return data;
+  };
 
   MonksEnhancedJournal.ready();
 }

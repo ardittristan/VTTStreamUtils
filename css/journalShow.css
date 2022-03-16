@@ -34,3 +34,16 @@
 body.stream > .monks-enhanced-journal.flexrow {
   display: none !important;
 }
+
+#journalShow .monks-journal-sheet.sheet .tab[data-tab] {
+  display: none;
+  width: unset;
+}
+
+#journalShow .monks-journal-sheet.sheet .tab[data-tab].active {
+  display: block;
+}
+
+#journalShow .monks-journal-sheet.sheet .owner-only {
+  display: none;
+}

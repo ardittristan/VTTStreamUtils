@@ -23,6 +23,10 @@ body.stream > section#combat {
   display: none;
 }
 
+body.stream .editor-edit {
+  display: none !important;
+}
+
 .streamUtils {
   width: 100%;
   height: 100%;

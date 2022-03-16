@@ -1,5 +1,9 @@
 # Patch Notes
 
+## Version 2.6.3
+
+- Full support for Monks Enhanced Journal.
+
 ## Version 2.6.2
 
 - Initial support for Monks Enhanced Journal, currently only default journals.
