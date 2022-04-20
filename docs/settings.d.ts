@@ -9,6 +9,7 @@ export interface Data {
   icon?:      string;
   iconColor?: string;
   path?:      string;
+  fallback?:  string;
   rowName?:   string;
   rowData?:   RowData[];
 }

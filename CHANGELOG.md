@@ -1,5 +1,9 @@
 # Patch Notes
 
+## Version 2.6.4
+
+- Add fallback option for custom overlay.
+
 ## Version 2.6.3
 
 - Full support for Monks Enhanced Journal.

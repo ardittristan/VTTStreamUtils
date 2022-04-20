@@ -15,6 +15,7 @@ In both objects the `icon` and `iconColor` properties are optional.
 * The `path` property is the path to the variable you want to show, you can get this path by opening the console (f12), typing `game.actors` and then opening any actor and it's value. The properties you open from here on are what you use in the `path` property separated by dots.
 * The `name` property is used to set the class of the number in html to be used for css selection.
 * `icon` and `iconColor` add an icon to the value and set the icon's color.
+* `fallback` will show when the supplied path points to an undefined value.
 
 #### Example List
 
@@ -28,7 +29,8 @@ In both objects the `icon` and `iconColor` properties are optional.
         "name": "test",
         "icon": "fas fa-code",
         "iconColor": "#FFFFFF",
-        "path": "data.data.attributes.exhaustion"
+        "path": "data.data.attributes.exhaustion",
+        "fallback": "0"
       }
     ]
   }

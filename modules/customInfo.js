@@ -70,7 +70,7 @@ export default async function customInfo() {
             setting.data.forEach((dataObject) => {
               let element = document.getElementById(`${setting.id}App${actor.id}${dataObject.name}`);
               if (element) {
-                element.innerHTML = `${hasIcon(dataObject)} ${getProperty(actor, dataObject.path)}`;
+                element.innerHTML = `${hasIcon(dataObject)} ${getProperty(actor, dataObject.path) || dataObject.fallback}`;
               }
             });
           }
