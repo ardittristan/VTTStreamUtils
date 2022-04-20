@@ -1,5 +1,10 @@
 # Patch Notes
 
+## Version 2.7.0
+
+- Add WebRTC (video chat) widget.
+- Add filter to actor list.
+
 ## Version 2.6.4
 
 - Add fallback option for custom overlay.

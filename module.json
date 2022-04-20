@@ -2,7 +2,7 @@
   "name": "0streamutils",
   "title": "Stream Utils",
   "description": "This module adds extra (such as hp) and custom overlays to the /stream page and also allows you to disable modules on the /stream page.",
-  "version": "2.6.4",
+  "version": "2.7.0",
   "author": "ardittristan#0001",
   "scripts": ["streamUtilsInit.js"],
   "esmodules": ["streamUtils.js"],
@@ -13,7 +13,8 @@
     "./css/healthInfo.css",
     "./css/diceSoNice.css",
     "./css/lastRoll.css",
-    "./css/journalShow.css"
+    "./css/journalShow.css",
+    "./css/webrtc.css"
   ],
   "dependencies": [{ "name": "acelib" }, { "name": "colorsettings" }],
   "languages": [

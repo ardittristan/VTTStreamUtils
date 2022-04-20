@@ -85,6 +85,9 @@
       },
       "journalBackground": {
         "name": "Journal widget background"
+      },
+      "enableWebrtc": {
+        "name": "Enable WebRTC (video-chat) widget"
       }
     },
     "windows": {

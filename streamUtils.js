@@ -8,6 +8,7 @@ import healthInfo from "./modules/healthInfo.js";
 import diceSoNice from "./modules/diceSoNice.js";
 import lastRoll from "./modules/lastRoll.js";
 import journalShow from "./modules/journalShow.js";
+import webrtc from "./modules/webrtc.js";
 
 if (window.location.pathname.includes("/stream")) {
   libraryLog("Initializing StreamUtils");
@@ -30,6 +31,7 @@ function main() {
     diceSoNice(),
     lastRoll(),
     journalShow(),
+    webrtc(),
     //
   ]).then(() => {
     libraryLog("StreamUtils initialized");
@@ -99,6 +101,15 @@ Hooks.once("init", () => {
     hint: "streamUtils.settings.globalUserSelector.hint",
     type: GlobalUserSelector,
     restricted: true,
+  });
+
+  // webrtc settings
+  game.settings.register("0streamutils", "enableWebrtc", {
+    name: "streamUtils.settings.enableWebrtc.name",
+    scope: "client",
+    type: Boolean,
+    default: true,
+    config: true,
   });
 
   // module disabler settings

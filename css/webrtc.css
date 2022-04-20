@@ -1,0 +1,22 @@
+body.stream #webrtc .camera-view.no-video {
+  display: none;
+}
+
+body.stream #webrtc div.camera-view {
+  border: none;
+  box-shadow: none;
+  background: none;
+}
+
+body.stream #webrtc .camera-view .player-name {
+  background: none !important;
+  border: none !important;
+}
+
+body.stream #webrtc .notification-bar {
+  display: none;
+}
+
+body.stream #webrtc .control-bar {
+  display: none !important;
+}
