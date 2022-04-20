@@ -328,6 +328,20 @@ class CharacterSelector extends FormApplication {
     super.activateListeners(html);
 
     html.find(".cancelButton").on("click", () => this.close());
+    html.find(".search-filter").on("keypress", (event) => {
+      if (event.key === "Enter") event.preventDefault();
+    });
+    html.find(".search-filter").on("input", function (event) {
+      if (this.value.length === 0) {
+        this.classList.add("empty");
+      } else {
+        this.classList.remove("empty");
+      }
+      this.nextElementSibling.innerHTML = this.nextElementSibling.innerHTML.replace(
+        /\/\* search-start \*\/".*?"\/\* search-end \*\//,
+        `/* search-start */"${this.value}"/* search-end */`
+      );
+    });
   }
 
   setupActorList() {

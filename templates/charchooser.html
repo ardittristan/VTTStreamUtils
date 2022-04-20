@@ -1,11 +1,22 @@
 <form autocomplete="off" onsubmit="event.preventDefault()">
   <div class="tableDiv">
+    <input type="text" class="search-filter empty" />
+    <style id="searchStyle">
+      .tableDiv > #searchStyle + table tr {
+        display: none;
+      }
+      .tableDiv > .search-filter.empty + #searchStyle + table tr,
+      .tableDiv > #searchStyle + table tr:first-of-type,
+      .tableDiv > #searchStyle + table tr[data-actor*=/* search-start */""/* search-end */] {
+        display: initial;
+      }
+    </style>
     <table>
       <tr>
         <th>Name</th>
       </tr>
       {{#each actors}}
-      <tr>
+      <tr data-actor="{{this.name}}">
         <td>
           <input type="checkbox" id="{{this.id}}" value="{{this.id}}" name="{{this.id}}" {{checked this.checked}} />
           <label for="{{this.id}}">{{this.name}}</label>
