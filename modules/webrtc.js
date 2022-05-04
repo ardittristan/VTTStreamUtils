@@ -1,3 +1,5 @@
+import { libraryLog } from "../streamUtils.js";
+
 export default async function webrtc() {
   if (!game.settings.get("0streamutils", "enableWebrtc")) return;
 

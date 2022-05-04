@@ -21,6 +21,7 @@ if (window.location.pathname.includes("/stream")) {
 function main() {
   $("body").append($('<div class="streamUtils"></div>'));
   DocumentSheetConfig.initializeSheets();
+  Scene.prototype._onUpdate = function () {};
   Promise.all([
     registerHelpers(),
     settingsSync(),

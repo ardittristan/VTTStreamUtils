@@ -1,5 +1,10 @@
 # Patch Notes
 
+## Version 2.7.1
+
+- Fix switching scene breaking stream view.
+- Fix WebRTC code error.
+
 ## Version 2.7.0
 
 - Add WebRTC (video chat) widget.
