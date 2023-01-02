@@ -1,4 +1,4 @@
-import { getArraySettingsCompat, libraryLog } from "../streamUtils.js";
+import { libraryLog } from "../streamUtils.js";
 
 export default async function healthInfo() {
   if (!game.settings.get("0streamutils", "enableHpView")) return;
@@ -10,8 +10,8 @@ export default async function healthInfo() {
   game.actors.forEach(async (actor) => {
     if (
       // check if actor list is defined
-      getArraySettingsCompat("0streamutils", "checkedList").includes(actor.id) ||
-      (getArraySettingsCompat("0streamutils", "checkedList").length === 0 && getArraySettingsCompat("0streamutils", "globalCheckedList").includes(actor.id))
+      game.settings.get("0streamutils", "checkedList").includes(actor.id) ||
+      (game.settings.get("0streamutils", "checkedList").length === 0 && game.settings.get("0streamutils", "globalCheckedList").includes(actor.id))
     ) {
       let template = await renderTemplate("modules/0streamutils/templates/hpOverlay.html", {
         actor: actor,
@@ -26,8 +26,8 @@ export default async function healthInfo() {
   setInterval(() => {
     game.actors.forEach((actor) => {
       if (
-        getArraySettingsCompat("0streamutils", "checkedList").includes(actor.id) ||
-        (getArraySettingsCompat("0streamutils", "checkedList").length === 0 && getArraySettingsCompat("0streamutils", "globalCheckedList").includes(actor.id))
+        game.settings.get("0streamutils", "checkedList").includes(actor.id) ||
+        (game.settings.get("0streamutils", "checkedList").length === 0 && game.settings.get("0streamutils", "globalCheckedList").includes(actor.id))
       ) {
         let element = document.getElementById(`hpApp${actor.id}`);
         if (element) {

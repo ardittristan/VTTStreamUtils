@@ -10,24 +10,14 @@ export default async function diceSoNice() {
   /** @type {String} */
   let dsnSource = document.querySelector('script[src*="modules/dice-so-nice"][src*="main.js"][type="module"]')?.src;
   if (dsnSource) {
-    if (game.modules.get("dice-so-nice").data.version.match(/^[0-3]/) !== null) {
-      let { Dice3D } = await import(dsnSource);
-      init();
-      main(Dice3D, false);
-    } else if (game.modules.get("dice-so-nice").data.version.match(/^4\.[0-3]/) !== null) {
-      let { Dice3D } = await import(dsnSource.replace("main.js", "Dice3D.js"));
-      init();
-      main(Dice3D, false);
-    } else {
-      init();
-      await new Promise((resolve) => {
-        Hooks.once("diceSoNiceInit", (dice3d) => {
-          main(dice3d.constructor);
-          resolve();
-        });
-        Hooks._hooks.ready.filter((hook) => hook.toString().includes("new Dice3D"))[0].call();
+    init();
+    await new Promise((resolve) => {
+      Hooks.once("diceSoNiceInit", (dice3d) => {
+        main(dice3d.constructor);
+        resolve();
       });
-    }
+      Hooks.events.ready.filter((hook) => hook.fn.toString().includes("new Dice3D"))[0].fn.call();
+    });
     libraryLog("Finished initializing DsN module");
   } else {
     console.error("DsN Not Found");
@@ -36,7 +26,7 @@ export default async function diceSoNice() {
 
 function init() {
   game.user.color = color;
-  game.user.data.color = color;
+  // game.user.data.color = color;
   game.user.getFlag = function (scope, key) {
     if (scope === "dice-so-nice" && key === "settings")
       return {
@@ -50,93 +40,42 @@ function init() {
     return null;
   };
 
-  if ((game.version ?? game.data.version).includes("0.7.")) {
-    canvas = new Canvas();
-  } else if ((game.version ?? game.data.version).split(".")[0] >= 9) {
-    const board = document.createElement("div");
-    board.id = "board";
-    board.style.display = "none";
-    document.body.appendChild(board);
-    canvas.initialize();
-  } else canvas.initialize();
+  const board = document.createElement("div");
+  board.id = "board";
+  board.style.display = "none";
+  document.body.appendChild(board);
+  canvas.initialize();
 
   window.ui.sidebar = {};
   window.ui.sidebar.popouts = {};
 }
 
-function main(Dice3D, New = true) {
-  if (New) {
-    Dice3D.prototype._buildCanvasOrig = Dice3D.prototype._buildCanvas;
-    Dice3D.prototype.showForRollOrig = Dice3D.prototype.showForRoll;
+function main(Dice3D) {
+  Dice3D.prototype._buildCanvasOrig = Dice3D.prototype._buildCanvas;
+  Dice3D.prototype.showForRollOrig = Dice3D.prototype.showForRoll;
 
-    Dice3D.prototype._resizeCanvas = function () {
-      this.canvas.width(game.settings.get("0streamutils", "DSNWidth") + "px");
-      this.canvas.height(game.settings.get("0streamutils", "DSNHeight") + "px");
-    };
+  Dice3D.prototype._buildCanvas = function () {
+    this._buildCanvasOrig();
+    this.canvas.width(game.settings.get("0streamutils", "DSNWidth") + "px");
+    this.canvas.height(game.settings.get("0streamutils", "DSNHeight") + "px");
+    this.canvas.prependTo(".streamUtils");
+    console.log(this.canvas);
+  };
 
-    Dice3D.prototype._buildCanvas = function () {
-      this._buildCanvasOrig();
-      this.canvas.prependTo(".streamUtils");
-      console.log(this.canvas);
-    };
+  Dice3D.prototype._welcomeMessage = function () {};
 
-    Dice3D.prototype._welcomeMessage = function () {};
-
-    Dice3D.prototype.showForRoll = function (...args) {
-      args.forEach((arg) => {
-        if (arg?.constructor?.name === "User") {
-          let color = getRandomColor();
-          arg.color = arg.color || color;
-          arg.data.color = arg.data?.color || color;
-          arg.getFlag = (id, flag) => arg.data?.flags?.[id]?.[flag] || null;
-        } else if (arg?.constructor?.name === "ChatSpeakerData") {
-          arg = null;
-        }
-      });
-      return this.showForRollOrig(...args);
-    };
-  } else {
-    class StreamDice3D extends Dice3D {
-      _resizeCanvas() {
-        this.canvas.width(game.settings.get("0streamutils", "DSNWidth") + "px");
-        this.canvas.height(game.settings.get("0streamutils", "DSNHeight") + "px");
+  Dice3D.prototype.showForRoll = function (...args) {
+    args.forEach((arg) => {
+      if (arg?.constructor?.name === "User") {
+        let color = getRandomColor();
+        arg.color = arg.color || color;
+        arg.getFlag = (id, flag) => arg.flags?.[id]?.[flag] || null;
+      } else if (arg?.constructor?.name === "ChatSpeakerData") {
+        arg = null;
       }
-
-      _buildCanvas() {
-        document.getElementById("dice-box-canvas")?.remove();
-        super._buildCanvas();
-        this.canvas.prependTo(".streamUtils");
-      }
-
-      _welcomeMessage() {}
-
-      showForRoll(...args) {
-        args.forEach((arg) => {
-          if (arg?.constructor?.name === "User") {
-            let color = getRandomColor();
-            arg.color = arg.color || color;
-            arg.data.color = arg.data?.color || color;
-            arg.getFlag = (id, flag) => arg.data?.flags?.[id]?.[flag] || null;
-          } else if (arg?.constructor?.name === "ChatSpeakerData") {
-            arg = null;
-          }
-        });
-        return super.showForRoll(...args);
-      }
-    }
-
-    game.dice3d = new StreamDice3D();
-  }
-
-  if (Number(game.modules.get("dice-so-nice").data.version.replace(".", "")) < 412) {
-    Hooks._hooks.createChatMessage.unshift((chatMessage) => {
-      if (chatMessage.isRoll) game.view = "game";
     });
-
-    Hooks._hooks.createChatMessage.push((chatMessage) => {
-      if (chatMessage.isRoll) game.view = "stream";
-    });
-  }
+    return this.showForRollOrig(...args);
+  };
 }
 
 function getRandomColor() {

@@ -1,34 +1,55 @@
 {
-  "name": "0streamutils",
   "title": "Stream Utils",
   "description": "This module adds extra (such as hp) and custom overlays to the /stream page and also allows you to disable modules on the /stream page.",
-  "version": "2.7.2",
-  "author": "ardittristan#0001",
+  "version": "2.7.3",
   "scripts": ["streamUtilsInit.js"],
   "esmodules": ["streamUtils.js"],
   "styles": [
-    "./css/streamUtils.css",
-    "./css/combatTracker.css",
-    "./css/customInfo.css",
-    "./css/healthInfo.css",
-    "./css/diceSoNice.css",
-    "./css/lastRoll.css",
-    "./css/journalShow.css",
-    "./css/webrtc.css"
+    "css/streamUtils.css",
+    "css/combatTracker.css",
+    "css/customInfo.css",
+    "css/healthInfo.css",
+    "css/diceSoNice.css",
+    "css/lastRoll.css",
+    "css/journalShow.css",
+    "css/webrtc.css"
   ],
-  "dependencies": [{ "name": "acelib" }, { "name": "colorsettings" }],
   "languages": [
     {
       "lang": "en",
       "name": "English",
-      "path": "./lang/en.json"
+      "path": "lang/en.json",
+      "flags": {}
     }
   ],
   "socket": true,
   "url": "https://github.com/ardittristan/VTTStreamUtils",
   "manifest": "https://raw.githubusercontent.com/ardittristan/VTTStreamUtils/master/module.json",
-  "download": "https://github.com/ardittristan/VTTStreamUtils/releases/download/2.7.2/streamUtils.zip",
-  "minimumCoreVersion": "0.7.0",
-  "compatibleCoreVersion": "9",
-  "library": true
+  "download": "https://github.com/ardittristan/VTTStreamUtils/releases/latest/download/streamUtils.zip",
+  "library": true,
+  "id": "0streamutils",
+  "authors": [
+    {
+      "name": "ardittristan#0001",
+      "flags": {}
+    }
+  ],
+  "relationships": {
+    "requires": [
+      {
+        "id": "acelib",
+        "type": "module",
+        "compatibility": {}
+      },
+      {
+        "id": "colorsettings",
+        "type": "module",
+        "compatibility": {}
+      }
+    ]
+  },
+  "compatibility": {
+    "minimum": "10",
+    "verified": "10"
+  }
 }

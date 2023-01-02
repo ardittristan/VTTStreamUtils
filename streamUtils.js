@@ -138,7 +138,7 @@ Hooks.once("init", () => {
     hint: "streamUtils.settings.hpPath.hint",
     scope: "world",
     type: String,
-    default: "data.data.attributes.hp.value",
+    default: "system.attributes.hp.value",
     config: true,
     restricted: true,
   });
@@ -147,7 +147,7 @@ Hooks.once("init", () => {
     hint: "streamUtils.settings.maxHpPath.hint",
     scope: "world",
     type: String,
-    default: "data.data.attributes.hp.max",
+    default: "system.attributes.hp.max",
     config: true,
     restricted: true,
   });
@@ -389,7 +389,7 @@ class CharacterSelector extends FormApplication {
   // gets setting and sets current value to it
   /** @return {String[]} */
   getList() {
-    return getArraySettingsCompat("0streamutils", "checkedList");
+    return game.settings.get("0streamutils", "checkedList");
   }
 
   // sets setting to current value
@@ -401,7 +401,7 @@ class CharacterSelector extends FormApplication {
 // same as above but different settings
 class GlobalCharacterSelector extends CharacterSelector {
   getList() {
-    return getArraySettingsCompat("0streamutils", "globalCheckedList");
+    return game.settings.get("0streamutils", "globalCheckedList");
   }
 
   setList(checkedList) {
@@ -417,7 +417,7 @@ class UserSelector extends CharacterSelector {
   }
 
   getList() {
-    return getArraySettingsCompat("0streamutils", "checkedUserList");
+    return game.settings.get("0streamutils", "checkedUserList");
   }
 
   setList(checkedList) {
@@ -447,7 +447,7 @@ class UserSelector extends CharacterSelector {
 
 class GlobalUserSelector extends UserSelector {
   getList() {
-    return getArraySettingsCompat("0streamutils", "globalCheckedUserList");
+    return game.settings.get("0streamutils", "globalCheckedUserList");
   }
 
   setList(checkedList) {
@@ -630,14 +630,6 @@ export function libraryLog(...args) {
     if (isString) outArgs.push("color: green;", "color: initial;");
   });
   console.log(...outArgs);
-}
-
-/**
- * @param  {string} module="0streamutils"
- * @param  {string} key
- */
-export function getArraySettingsCompat(module = "0streamutils", key) {
-  return (game.version ?? game.data.version).includes("0.7.") ? game.settings.get(module, key)?.[0] || [] : game.settings.get(module, key);
 }
 //#endregion
 

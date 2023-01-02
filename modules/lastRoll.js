@@ -1,4 +1,4 @@
-import { getArraySettingsCompat, libraryLog } from "../streamUtils.js";
+import { libraryLog } from "../streamUtils.js";
 
 export default async function lastRoll() {
   if (!game.settings.get("0streamutils", "enableLastRoll")) return;
@@ -10,8 +10,8 @@ export default async function lastRoll() {
   game.users.forEach(async (user) => {
     if (
       // check if user list is defined
-      getArraySettingsCompat("0streamutils", "checkedUserList").includes(user.id) ||
-      (getArraySettingsCompat("0streamutils", "checkedUserList").length === 0 && getArraySettingsCompat("0streamutils", "globalCheckedUserList").includes(user.id))
+      game.settings.get("0streamutils", "checkedUserList").includes(user.id) ||
+      (game.settings.get("0streamutils", "checkedUserList").length === 0 && game.settings.get("0streamutils", "globalCheckedUserList").includes(user.id))
     ) {
       let template = await renderTemplate("modules/0streamutils/templates/lastRollOverlay.html", {
         user: user,
@@ -25,8 +25,8 @@ export default async function lastRoll() {
   setInterval(() => {
     game.users.forEach(async (user) => {
       if (
-        getArraySettingsCompat("0streamutils", "checkedUserList").includes(user.id) ||
-        (getArraySettingsCompat("0streamutils", "checkedUserList").length === 0 && getArraySettingsCompat("0streamutils", "globalCheckedUserList").includes(user.id))
+        game.settings.get("0streamutils", "checkedUserList").includes(user.id) ||
+        (game.settings.get("0streamutils", "checkedUserList").length === 0 && game.settings.get("0streamutils", "globalCheckedUserList").includes(user.id))
       ) {
         let element = document.getElementById(`lastRollApp${user.id}`);
         if (element) {
@@ -47,7 +47,7 @@ if (window.location.pathname.includes("/stream"))
      */
     function (chatMessage) {
       if (game.settings.get("0streamutils", "enableLastRoll") && chatMessage.isRoll) {
-        game.users.get(chatMessage.data.user).lastRoll = game.settings.get("0streamutils", "showFullSumLastRoll") ? chatMessage.roll.total : chatMessage.roll.result;
+        chatMessage.user.lastRoll = game.settings.get("0streamutils", "showFullSumLastRoll") ? chatMessage.rolls?.[0]?.total : chatMessage.rolls?.[0]?.result;
       }
     }
   );
