@@ -9,6 +9,7 @@ import diceSoNice from "./modules/diceSoNice.js";
 import lastRoll from "./modules/lastRoll.js";
 import journalShow from "./modules/journalShow.js";
 import webrtc from "./modules/webrtc.js";
+import changeableTemplates from "./templates/changeable.js";
 
 if (window.location.pathname.includes("/stream")) {
   libraryLog("Initializing StreamUtils");
@@ -16,11 +17,21 @@ if (window.location.pathname.includes("/stream")) {
   // check for chat log to appear and then run main code
   observe("#chat-log", main);
   disableAudio();
+} else {
+  registerHelpers();
 }
 
 function main() {
   $("body").append($('<div class="streamUtils"></div>'));
   DocumentSheetConfig.initializeSheets();
+  const origRenderTemplate = renderTemplate;
+  renderTemplate = async function (path, data) {
+    if (changeableTemplates.includes(path.replace(".", "_"))) {
+      const setting = game.settings.get("0streamutils", "hbsChanger");
+      if (setting[path.replace(".", "_")].trim().length > 0) return setting[path.replace(".", "_")];
+    }
+    return await origRenderTemplate(path, data);
+  };
   Scene.prototype._onUpdate = function () {};
   Promise.all([
     registerHelpers(),
@@ -45,6 +56,21 @@ function main() {
 
 //#region
 Hooks.once("init", () => {
+  // hbs changer
+  game.settings.registerMenu("0streamutils", "openHbsChanger", {
+    name: "streamUtils.settings.openHbsChanger.name",
+    label: "streamUtils.settings.openHbsChanger.label",
+    hint: "streamUtils.windows.TemplateReplacer.text",
+    type: TemplateReplacer,
+    restricted: true,
+  });
+
+  game.settings.register("0streamutils", "hbsChanger", {
+    scope: "world",
+    type: Object,
+    default: {},
+  });
+
   // share settings
   game.settings.registerMenu("0streamutils", "sendSettings", {
     name: "streamUtils.settings.sendSettings.name",
@@ -298,6 +324,37 @@ Hooks.once("ready", () => {
     }
   });
 });
+
+class TemplateReplacer extends FormApplication {
+  static get defaultOptions() {
+    return mergeObject(super.defaultOptions, {
+      id: "streamutils-template-merger",
+      title: game.i18n.localize("streamUtils.windows.TemplateReplacer.title"),
+      template: "modules/0streamutils/templates/customTemplate.html",
+      classes: ["sheet"],
+      closeOnSubmit: true,
+      resizable: true,
+    });
+  }
+
+  getData(options) {
+    const data = super.getData(options);
+
+    data.setting = game.settings.get("0streamutils", "hbsChanger");
+    data.changeable = changeableTemplates.map((e) => e.replace(".", "_"));
+
+    return data;
+  }
+
+  _updateObject(_e, data) {
+    game.settings.set("0streamutils", "hbsChanger", data);
+  }
+
+  activateListeners(html) {
+    super.activateListeners(html);
+    html.find(".cancelButton").on("click", () => this.close());
+  }
+}
 
 /**
  * @description application that lists all actors and lets user check and uncheck actors

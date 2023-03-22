@@ -1,0 +1,12 @@
+<form autocomplete="off" onsubmit="event.preventDefault()">
+  <p>{{localize "streamUtils.windows.TemplateReplacer.text"}}</p>
+  <hr />
+  {{#each changeable}}
+  <p>{{this}}</p>
+  <textarea name="{{this}}">{{getProperty @root.setting this}}</textarea>
+  {{/each}}
+  <div class="bottomButtons">
+    <button type="submit">{{localize "Save"}}</button>
+    <button type="button" class="cancelButton">{{localize "Cancel"}}</button>
+  </div>
+</form>

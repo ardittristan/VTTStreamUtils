@@ -1,7 +1,7 @@
 {
   "title": "Stream Utils",
   "description": "This module adds extra (such as hp) and custom overlays to the /stream page and also allows you to disable modules on the /stream page.",
-  "version": "2.7.3",
+  "version": "2.8.0",
   "scripts": ["streamUtilsInit.js"],
   "esmodules": ["streamUtils.js"],
   "styles": [

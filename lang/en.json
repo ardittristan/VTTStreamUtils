@@ -88,6 +88,10 @@
       },
       "enableWebrtc": {
         "name": "Enable WebRTC (video-chat) widget"
+      },
+      "openHbsChanger": {
+        "name": "Custom Templates",
+        "label": "Open"
       }
     },
     "windows": {
@@ -112,6 +116,10 @@
           "css": "Custom CSS",
           "entries": "Custom Entries"
         }
+      },
+      "TemplateReplacer": {
+        "title": "Custom Templates",
+        "text": "Replaces stream utils templates with custom templates"
       }
     }
   }
